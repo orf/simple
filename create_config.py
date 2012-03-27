@@ -13,7 +13,8 @@ with open("settings.py", "w") as fd:
     fd.write("ADMIN_USERNAME = '%s'\n"%input_with_default("Admin username","admin"))
     fd.write("ADMIN_PASSWORD = '%s'\n"%input_with_default("Admin password","password"))
     fd.write("ANALYTICS_ID = '%s'\n"%input_with_default("Google analytics ID",""))
-    fd.write('SQLALCHEMY_DATABASE_URI = "%s"'%input_with_default("Database URI",""))
+    fd.write('SQLALCHEMY_DATABASE_URI = "%s"'%input_with_default("Database URI","sqlite:///simple.db"))
     fd.flush()
 
 print "Created!"
+raw_input()
