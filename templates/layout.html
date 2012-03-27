@@ -15,10 +15,10 @@
     <span>{{ config.BLOG_TAGLINE }}</span>
     <ul>
         {% if config.GITHUB_USERNAME %}
-            <li><a href="https://github.com/{{ config.github_username }}/">Github</a></li>
+            <li><a href="https://github.com/{{ config.GITHUB_USERNAME }}/">Github</a></li>
         {% endif %}
         {% if config.CONTACT_EMAIL %}
-            <li><a href="mailto:{{ config.contact_email }}?subject:Howdy">Email me</a></li>
+            <li><a href="mailto:{{ config.CONTACT_EMAIL }}?subject:Howdy">Email me</a></li>
         {% endif %}
         <li><a href="{{ url_for('feed') }}">Feed</a></li>
     </ul>
