@@ -12,12 +12,12 @@ with open("settings.py", "w") as fd:
     fd.write("ADMIN_USERNAME = '%s'\n"%input_with_default("Admin username","admin"))
     fd.write("ADMIN_PASSWORD = '%s'\n"%hashlib.md5(input_with_default("Admin password","password")).hexdigest())
     fd.write("ANALYTICS_ID = '%s'\n"%input_with_default("Google analytics ID",""))
-    fd.write('SQLALCHEMY_DATABASE_URI = "%s"'%input_with_default("Database URI","sqlite:///simple.db"))
-    fd.write("GITHUB_USERNAME = '%s'"%input_with_default("Github Username", ""))
-    fd.write("CONTACT_EMAIL = '%s'"%input_with_default("Contact Email", ""))
-    fd.write("BLOG_TITLE = '%s'"%input_with_default("Blog title", ""))
-    fd.write("BLOG_TAGLINE = '%s'"%input_with_default("Blog tagline", ""))
-    fd.write("BLOG_URL = '%s'"%input_with_default("Blog URL",""))
+    fd.write('SQLALCHEMY_DATABASE_URI = "%s"\n'%input_with_default("Database URI","sqlite:///simple.db"))
+    fd.write("GITHUB_USERNAME = '%s'\n"%input_with_default("Github Username", ""))
+    fd.write("CONTACT_EMAIL = '%s'\n"%input_with_default("Contact Email", ""))
+    fd.write("BLOG_TITLE = '%s'\n"%input_with_default("Blog title", ""))
+    fd.write("BLOG_TAGLINE = '%s'\n"%input_with_default("Blog tagline", ""))
+    fd.write("BLOG_URL = '%s'\n"%input_with_default("Blog URL",""))
     fd.flush()
 
 print "Created!"
