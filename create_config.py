@@ -14,6 +14,8 @@ with open("settings.py", "w") as fd:
     fd.write("ADMIN_PASSWORD = '%s'\n"%input_with_default("Admin password","password"))
     fd.write("ANALYTICS_ID = '%s'\n"%input_with_default("Google analytics ID",""))
     fd.write('SQLALCHEMY_DATABASE_URI = "%s"'%input_with_default("Database URI","sqlite:///simple.db"))
+    fd.write("GITHUB_USERNAME = '%s'"%input_with_default("Github Username", ""))
+    fd.write("CONTACT_EMAIL = '%s'"%input_with_default("Contact Email", ""))
     fd.flush()
 
 print "Created!"

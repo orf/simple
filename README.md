@@ -2,6 +2,11 @@ Simple
 ================
 A clone of [Obtvse](http://github.com/NateW/obtvse).
 
+About
+============
+The point of Simple is to be simple. The blog is 1 file (excluding resources) with a few simple pure-python dependancies, it doesn't
+require a database server, has a small footprint and is fast.
+
 Installation
 ============
 Its quite simple. Go download Python 2.7+, Flask, Sqlalchemy and flask-sqlalchemy and you are good to go.
