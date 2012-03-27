@@ -41,7 +41,7 @@ def requires_authentication(f):
 @app.route("/")
 def index():
     page = request.args.get("page", 0, type=int)
-    posts_master = db.session.query(models.Post).filter_by(draft=False).order_by(models.Post.created_at.asc())
+    posts_master = db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.asc())
     posts_count = posts_master.count()
 
     posts = posts_master.limit(app.config["POSTS_PER_PAGE"]).offset(page*app.config["POSTS_PER_PAGE"]).all()
@@ -53,7 +53,7 @@ def index():
 @app.route("/<int:post_id>")
 def view_post(post_id):
     try:
-        post = db.session.query(models.Post).filter_by(id=post_id, draft=False).one()
+        post = db.session.query(Post).filter_by(id=post_id, draft=False).one()
     except Exception:
         return abort(404)
 
@@ -62,7 +62,7 @@ def view_post(post_id):
 @app.route("/<slug>")
 def view_post_slug(slug):
     try:
-        post = db.session.query(models.Post).filter_by(slug=slug,draft=False).one()
+        post = db.session.query(Post).filter_by(slug=slug,draft=False).one()
     except Exception:
         return abort(404)
 
@@ -73,7 +73,7 @@ def view_post_slug(slug):
 @app.route("/new", methods=["POST", "GET"])
 @requires_authentication
 def new_post():
-    post = models.Post()
+    post = Post()
     post.title = request.form.get("title","untitled")
     post.slug = slugify(post.title)
     post.created_at = datetime.datetime.now()
@@ -88,7 +88,7 @@ def new_post():
 @requires_authentication
 def edit(id):
     try:
-        post = db.session.query(models.Post).filter_by(id=id).one()
+        post = db.session.query(Post).filter_by(id=id).one()
     except Exception:
         return abort(404)
 
@@ -115,7 +115,7 @@ def edit(id):
 @requires_authentication
 def delete(id):
     try:
-        post = db.session.query(models.Post).filter_by(id=id).one()
+        post = db.session.query(Post).filter_by(id=id).one()
     except Exception:
         flash("Error deleting post ID %s"%id, category="error")
     else:
@@ -127,17 +127,17 @@ def delete(id):
 @app.route("/admin", methods=["GET", "POST"])
 @requires_authentication
 def admin():
-    drafts = db.session.query(models.Post).filter_by(draft=True)\
-                                          .order_by(models.Post.created_at.desc()).all()
-    posts  = db.session.query(models.Post).filter_by(draft=False)\
-                                          .order_by(models.Post.created_at.desc()).all()
+    drafts = db.session.query(Post).filter_by(draft=True)\
+                                          .order_by(Post.created_at.desc()).all()
+    posts  = db.session.query(Post).filter_by(draft=False)\
+                                          .order_by(Post.created_at.desc()).all()
     return render_template("admin.html", drafts=drafts, posts=posts)
 
 @app.route("/admin/save/<int:id>", methods=["POST"])
 @requires_authentication
 def save_post(id):
     try:
-        post = db.session.query(models.Post).filter_by(id=id).one()
+        post = db.session.query(Post).filter_by(id=id).one()
     except Exception:
         return abort(404)
 
@@ -153,7 +153,7 @@ def save_post(id):
 @requires_authentication
 def preview(id):
     try:
-        post = db.session.query(models.Post).filter_by(id=id).one()
+        post = db.session.query(Post).filter_by(id=id).one()
     except Exception:
         return abort(404)
 
@@ -168,7 +168,7 @@ def feed():
         yield '      <title>%s</title>\n'%app.config["BLOG_TITLE"]
         yield '      <description>%s</title>\n'%app.config["BLOG_TAGLINE"]
         yield '      <link>%s</link>\n'%app.config["BLOG_URL"]
-        for post in db.session.query(models.Post).filter_by(draft=False).order_by(models.Post.created_at.desc()).all():
+        for post in db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.desc()).all():
             yield "         <item>\n"
             yield "            <title>%s</title>\n"%post.title
             if post.text:
