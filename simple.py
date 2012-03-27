@@ -27,7 +27,10 @@ class Post(db.Model):
     def render_content(self):
         return markdown.Markdown(extensions=['fenced_code'], output_format="html5", safe_mode=True).convert(self.text)
 
-db.create_all()
+try:
+    db.create_all()
+except Exception:
+    pass
 
 def requires_authentication(f):
     @wraps(f)
