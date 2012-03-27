@@ -16,6 +16,9 @@ with open("settings.py", "w") as fd:
     fd.write('SQLALCHEMY_DATABASE_URI = "%s"'%input_with_default("Database URI","sqlite:///simple.db"))
     fd.write("GITHUB_USERNAME = '%s'"%input_with_default("Github Username", ""))
     fd.write("CONTACT_EMAIL = '%s'"%input_with_default("Contact Email", ""))
+    fd.write("BLOG_TITLE = '%s'"%input_with_default("Blog title", ""))
+    fd.write("BLOG_TAGLINE = '%s'"%input_with_default("Blog tagline", ""))
+    fd.write("BLOG_URL = '%s'"%input_with_default("Blog URL",""))
     fd.flush()
 
 print "Created!"

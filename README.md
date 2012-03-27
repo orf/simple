@@ -5,7 +5,7 @@ A clone of [Obtvse](http://github.com/NateW/obtvse).
 About
 ============
 The point of Simple is to be simple. The blog is 1 file (excluding resources) with a few simple pure-python dependancies, it doesn't
-require a database server, has a small footprint and is fast.
+require a database server, has a small footprint and is fairly fast.
 
 Installation
 ============

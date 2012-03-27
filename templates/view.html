@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 
+{% block title %}{{ post.title }} - {{ config.BLOG_TITLE }}{% endblock %}
 
 {% block content %}
     <section id="post-{{ post.id }}">

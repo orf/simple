@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block title %}{{ config.BLOG_TITLE }}{% endblock %}
+
 {% block content %}
 
     {% for post in posts %}

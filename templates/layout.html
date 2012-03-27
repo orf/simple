@@ -5,14 +5,14 @@
     <link href="{{ url_for('static', filename='css/_normalize.css') }}" type="text/css" media="screen" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/posts.css') }}" type="text/css" media="screen" rel="stylesheet">
     <meta name="author" content="{{ config.AUTHOR }}">
-    <link href="/posts.rss" rel="alternate" title="RSS" type="application/rss+xml" />
+    <link href="{{ url_for('feed') }}" rel="alternate" title="RSS" type="application/rss+xml" />
     <link href='http://fonts.googleapis.com/css?family=Lato:300,900' rel='stylesheet' type='text/css' />
 </head>
 
 <body>
 <header>
-    <h1><a href="{{ url_for('index') }}">Toms corner of the internet</a></h1>
-    <span>Just another blog</span>
+    <h1><a href="{{ url_for('index') }}">{{ config.BLOG_TITLE }}</a></h1>
+    <span>{{ config.BLOG_TAGLINE }}</span>
     <ul>
         {% if config.GITHUB_USERNAME %}
             <li><a href="https://github.com/{{ config.github_username }}/">Github</a></li>
@@ -20,10 +20,11 @@
         {% if config.CONTACT_EMAIL %}
             <li><a href="mailto:{{ config.contact_email }}?subject:Howdy">Email me</a></li>
         {% endif %}
-        <li>RSS :o</li>
+        <li><a href="{{ url_for('feed') }}">Feed</a></li>
     </ul>
     <span class="powered-by">
-      Powered by <a href="http://github.com/natew/obtvse.git">Obtvse</a>
+      Powered by <a href="http://github.com/orf/simple">Simple</a>,
+        inspired by <a href="https://github.com/NateW/obtvse">Obtvse</a>
       {# <% if is_admin? %> &nbsp;&middot;&nbsp; <a href="/admin">Admin</a><% end %> #}
   </span>
 
