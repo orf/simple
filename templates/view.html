@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+
+{% block content %}
+    <section id="post-{{ post.id }}">
+        <div class="post contain">
+            <h1>{{ post.title }}</h1>
+            {{ post.render_content()|safe }}
+            {% if is_admin %}
+                <ul class="actions">
+                    <li><a href="{{ url_for('edit', post_id=post.id) }}">Edit</a></li>
+                </ul>
+            {% endif %}
+        </div>
+
+        <a class="button space-top" href="{{ url_for('index', page=pid) }}">Back to Blog</a>
+
+    </section>
+{% endblock %}
