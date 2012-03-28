@@ -21,6 +21,7 @@
             <li><a href="mailto:{{ config.CONTACT_EMAIL }}?subject:Howdy">Email me</a></li>
         {% endif %}
         <li><a href="{{ url_for('feed') }}">Feed</a></li>
+        {% block sidebar %}{% endblock %}
     </ul>
     <span class="powered-by">
       Powered by <a href="http://github.com/orf/simple">Simple</a>,

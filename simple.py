@@ -21,6 +21,7 @@ class Post(db.Model):
     slug  = db.Column(db.String(), unique=True)
     text  = db.Column(db.String(), default="")
     draft = db.Column(db.Boolean(), index=True, default=True)
+    views = db.Column(db.Integer(), default=0)
     created_at = db.Column(db.DateTime, index=True)
     updated_at = db.Column(db.DateTime)
 
@@ -62,6 +63,9 @@ def view_post(post_id):
     except Exception:
         return abort(404)
 
+    db.session.query(Post).filter_by(id=post_id).update({Post.views:Post.views+1})
+    db.session.commit()
+
     return render_template("view.html", post=post)
 
 @app.route("/<slug>")
@@ -71,8 +75,10 @@ def view_post_slug(slug):
     except Exception:
         return abort(404)
 
-    pid = request.args.get("pid", "0")
+    db.session.query(Post).filter_by(slug=slug).update({Post.views:Post.views+1})
+    db.session.commit()
 
+    pid = request.args.get("pid", "0")
     return render_template("view.html", post=post, pid=pid)
 
 @app.route("/new", methods=["POST", "GET"])
