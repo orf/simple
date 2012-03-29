@@ -40,6 +40,19 @@ h1,
 p {
     color: #555; }
 
+code.prettyprint {
+    line-height: 1.2em;
+}
+
+
+div.bottom_right {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 350px;
+}
+
 a,
 a:visited
 a:active {
