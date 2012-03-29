@@ -7,9 +7,11 @@
     <meta name="author" content="{{ config.AUTHOR }}">
     <link href="{{ url_for('feed') }}" rel="alternate" title="RSS" type="application/rss+xml" />
     <link href='http://fonts.googleapis.com/css?family=Lato:300,900' rel='stylesheet' type='text/css' />
+    <link href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet" type="text/css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js" type="text/javascript"></script>
 </head>
 
-<body>
+<body onload="prettyPrint()">
 <header>
     <h1><a href="{{ url_for('index') }}">{{ config.BLOG_TITLE }}</a></h1>
     <span>{{ config.BLOG_TAGLINE }}</span>
