@@ -172,7 +172,7 @@ def preview(id):
 
 @app.route("/posts.rss")
 def feed():
-    posts = db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.desc()).fetch(limit=10)
+    posts = db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.desc()).limit(10).all()
 
     return render_template('index.xml', posts=posts)
 
