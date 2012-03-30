@@ -1,6 +1,6 @@
 from functools import wraps
 import hashlib
-from flask import render_template, request, Response, Flask, flash, redirect, url_for, abort, jsonify, Response
+from flask import render_template, request, Flask, flash, redirect, url_for, abort, jsonify, Response, make_response
 import re
 from unicodedata import normalize
 from flaskext.sqlalchemy import SQLAlchemy
@@ -17,7 +17,7 @@ _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 class Post(db.Model):
     __tablename__ = "posts"
     id    = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(), unique=True)
+    title = db.Column(db.String())
     slug  = db.Column(db.String(), unique=True)
     text  = db.Column(db.String(), default="")
     draft = db.Column(db.Boolean(), index=True, default=True)
@@ -106,11 +106,10 @@ def edit(id):
     if request.method == "GET":
         return render_template("edit.html", post=post)
     else:
-        title = request.form.get("post_title","")
-        text  = request.form.get("post_content","")
-        post.title = title
-        post.slug = slugify(post.title)
-        post.text  = text
+        if post.title != request.form.get("post_title", ""):
+            post.title = request.form.get("post_title","")
+            post.slug = slugify(post.title)
+        post.text = request.form.get("post_content","")
         post.updated_at = datetime.datetime.now()
 
         if any(request.form.getlist("post_draft", type=int)):
@@ -151,9 +150,9 @@ def save_post(id):
         post = db.session.query(Post).filter_by(id=id).one()
     except Exception:
         return abort(404)
-
-    post.title = request.form.get("title","")
-    post.slug = slugify(post.title)
+    if post.title != request.form.get("title", ""):
+        post.title = request.form.get("title","")
+        post.slug = slugify(post.title)
     post.text = request.form.get("content", "")
     post.updated_at = datetime.datetime.now()
     db.session.add(post)
@@ -174,7 +173,9 @@ def preview(id):
 def feed():
     posts = db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.desc()).limit(10).all()
 
-    return render_template('index.xml', posts=posts)
+    r = make_response(render_template('index.xml', posts=posts))
+    r.mimetype = "application/xml"
+    return r
 
 def slugify(text, delim=u'-'):
     """Generates an slightly worse ASCII-only slug."""
@@ -183,8 +184,14 @@ def slugify(text, delim=u'-'):
         word = normalize('NFKD', unicode(word)).encode('ascii', 'ignore')
         if word:
             result.append(word)
-    return unicode(delim.join(result))
-
+    slug = unicode(delim.join(result))
+    # This could have issues if a post is marked as draft, then live, then draft, then live and there are > 1 posts
+    # with the same slug. Oh well.
+    _c = db.session.query(Post).filter_by(slug=slug).count()
+    if _c > 0:
+        return "%s-%s"%(slug, _c)
+    else:
+        return slug
 
 if __name__ == "__main__":
     app.run()
