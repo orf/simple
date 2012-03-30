@@ -26,7 +26,7 @@
                         <label for="post_draft">Draft</label>
                         <input name="post_draft" type="hidden" value="0" /><input id="post_draft" name="post_draft" type="checkbox" value="1" {% if post.draft %}checked{% endif %} />
                         {% if post.draft %}
-                            <a onclick="issueSaveAjax({{ post.id }}, true)" target="_blank">Preview</a>
+                            <a href onclick="issueSaveAjax({{ post.id }}, true)" target="_blank">Preview</a>
                         {% else %}
                             <a href="{{  url_for('view_post_slug', slug=post.slug) }}" target="_blank">View live</a>
                         {% endif %}
