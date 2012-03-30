@@ -327,6 +327,7 @@ label {
 #admin .col ul li h3 a {
     border: none; }
 #admin textarea, #admin pre {
+    border: 1px solid rgba(128,128,128,.3);
     margin: 0;
     padding: 0;
     outline: 0;
@@ -343,6 +344,7 @@ label {
      * padding whilst still keeping the overall width
      * at exactly that of the containing element.
      */
+    overflow: hidden;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     -ms-box-sizing: border-box;

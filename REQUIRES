@@ -1,6 +1,0 @@
-Flask==0.8
-Flask-SQLAlchemy==0.15
-Jinja2==2.6
-Markdown==2.1.1
-SQLAlchemy==0.7.6
-Werkzeug==0.8.3
