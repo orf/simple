@@ -172,28 +172,9 @@ def preview(id):
 
 @app.route("/posts.rss")
 def feed():
-    def generate_feed():
-        yield '<?xml version="1.0" encoding="UTF-8"?>\n'
-        yield '<rss version="2.0">\n'
-        yield '   <channel>\n'
-        yield '      <title>%s</title>\n'%app.config["BLOG_TITLE"]
-        yield '      <description>%s</title>\n'%app.config["BLOG_TAGLINE"]
-        yield '      <link>%s</link>\n'%app.config["BLOG_URL"]
-        for post in db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.desc()).all():
-            yield "         <item>\n"
-            yield "            <title>%s</title>\n"%post.title
-            if post.text:
-                yield "            <description>%s</description>\n"%post.render_content()
-            else:
-                yield "            <description>No content</description>\n"
-            yield "            <pubDate>%s</pubDate>\n"%post.created_at.strftime('%B %d, %Y')
-            yield "            <link>%s</link>\n"%("%s/%s"%(app.config["BLOG_URL"], post.slug ))
-            yield "            <guid>%s</guid>\n"%("%s/%s"%(app.config["BLOG_URL"], post.slug ))
-            yield "         </item>\n"
-        yield "   </channel>\n"
-        yield "</rss>"
+    posts = Post.query(Post.draft==False).order(-Post.created_at).fetch(limit=10)
 
-    return Response(generate_feed(), mimetype="application/rss+xml")
+    return render_template('index.xml', posts=posts)
 
 def slugify(text, delim=u'-'):
     """Generates an slightly worse ASCII-only slug."""
