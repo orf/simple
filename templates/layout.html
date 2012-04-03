@@ -22,6 +22,13 @@
         {% if config.CONTACT_EMAIL %}
             <li><a href="mailto:{{ config.CONTACT_EMAIL }}?subject:Howdy">Email me</a></li>
         {% endif %}
+        {% if config.TWITTER_HANDLE %}
+            <li><a href="https://twitter.com/{{ config.TWITTER_HANDLE }}/">Twitter</a></li>
+        {% endif %}
+        {% if config.GOOGLE_PLUS_PROFILE %}
+            <li><a href="https://plus.google.com/{{ config.GOOGLE_PLUS_PROFILE }}/posts">Google+</a></li>
+        {% endif %}
+
         <li><a href="{{ url_for('feed') }}">Feed</a></li>
         {% block sidebar %}{% endblock %}
     </ul>

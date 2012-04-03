@@ -189,7 +189,7 @@ def slugify(text, delim=u'-'):
     # with the same slug. Oh well.
     _c = db.session.query(Post).filter_by(slug=slug).count()
     if _c > 0:
-        return "%s-%s"%(slug, _c)
+        return "%s%s%s"%(slug, delim, _c)
     else:
         return slug
 
