@@ -7,9 +7,11 @@
     <meta name="author" content="{{ config.AUTHOR }}">
     <link href="{{ url_for('feed') }}" rel="alternate" title="RSS" type="application/rss+xml" />
     <link href='http://fonts.googleapis.com/css?family=Lato:300,900' rel='stylesheet' type='text/css' />
+    <link href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet" type="text/css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/prettify/188.0.0/prettify.js" type="text/javascript"></script>
 </head>
 
-<body>
+<body onload="prettyPrint()">
 <header>
     <h1><a href="{{ url_for('index') }}">{{ config.BLOG_TITLE }}</a></h1>
     <span>{{ config.BLOG_TAGLINE }}</span>
@@ -20,7 +22,15 @@
         {% if config.CONTACT_EMAIL %}
             <li><a href="mailto:{{ config.CONTACT_EMAIL }}?subject:Howdy">Email me</a></li>
         {% endif %}
+        {% if config.TWITTER_HANDLE %}
+            <li><a href="https://twitter.com/{{ config.TWITTER_HANDLE }}/">Twitter</a></li>
+        {% endif %}
+        {% if config.GOOGLE_PLUS_PROFILE %}
+            <li><a href="https://plus.google.com/{{ config.GOOGLE_PLUS_PROFILE }}/posts">Google+</a></li>
+        {% endif %}
+
         <li><a href="{{ url_for('feed') }}">Feed</a></li>
+        {% block sidebar %}{% endblock %}
     </ul>
     <span class="powered-by">
       Powered by <a href="http://github.com/orf/simple">Simple</a>,

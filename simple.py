@@ -1,6 +1,6 @@
 from functools import wraps
 import hashlib
-from flask import render_template, request, Response, Flask, flash, redirect, url_for, abort, jsonify, Response
+from flask import render_template, request, Flask, flash, redirect, url_for, abort, jsonify, Response, make_response
 import re
 from unicodedata import normalize
 from flaskext.sqlalchemy import SQLAlchemy
@@ -17,10 +17,11 @@ _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 class Post(db.Model):
     __tablename__ = "posts"
     id    = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(), unique=True)
+    title = db.Column(db.String())
     slug  = db.Column(db.String(), unique=True)
     text  = db.Column(db.String(), default="")
     draft = db.Column(db.Boolean(), index=True, default=True)
+    views = db.Column(db.Integer(), default=0)
     created_at = db.Column(db.DateTime, index=True)
     updated_at = db.Column(db.DateTime)
 
@@ -46,7 +47,7 @@ def requires_authentication(f):
 @app.route("/")
 def index():
     page = request.args.get("page", 0, type=int)
-    posts_master = db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.asc())
+    posts_master = db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.desc())
     posts_count = posts_master.count()
 
     posts = posts_master.limit(app.config["POSTS_PER_PAGE"]).offset(page*app.config["POSTS_PER_PAGE"]).all()
@@ -62,6 +63,9 @@ def view_post(post_id):
     except Exception:
         return abort(404)
 
+    db.session.query(Post).filter_by(id=post_id).update({Post.views:Post.views+1})
+    db.session.commit()
+
     return render_template("view.html", post=post)
 
 @app.route("/<slug>")
@@ -71,8 +75,10 @@ def view_post_slug(slug):
     except Exception:
         return abort(404)
 
-    pid = request.args.get("pid", "0")
+    db.session.query(Post).filter_by(slug=slug).update({Post.views:Post.views+1})
+    db.session.commit()
 
+    pid = request.args.get("pid", "0")
     return render_template("view.html", post=post, pid=pid)
 
 @app.route("/new", methods=["POST", "GET"])
@@ -100,11 +106,10 @@ def edit(id):
     if request.method == "GET":
         return render_template("edit.html", post=post)
     else:
-        title = request.form.get("post_title","")
-        text  = request.form.get("post_content","")
-        post.title = title
-        post.slug = slugify(post.title)
-        post.text  = text
+        if post.title != request.form.get("post_title", ""):
+            post.title = request.form.get("post_title","")
+            post.slug = slugify(post.title)
+        post.text = request.form.get("post_content","")
         post.updated_at = datetime.datetime.now()
 
         if any(request.form.getlist("post_draft", type=int)):
@@ -145,9 +150,9 @@ def save_post(id):
         post = db.session.query(Post).filter_by(id=id).one()
     except Exception:
         return abort(404)
-
-    post.title = request.form.get("title","")
-    post.slug = slugify(post.title)
+    if post.title != request.form.get("title", ""):
+        post.title = request.form.get("title","")
+        post.slug = slugify(post.title)
     post.text = request.form.get("content", "")
     post.updated_at = datetime.datetime.now()
     db.session.add(post)
@@ -166,28 +171,11 @@ def preview(id):
 
 @app.route("/posts.rss")
 def feed():
-    def generate_feed():
-        yield '<?xml version="1.0" encoding="UTF-8"?>\n'
-        yield '<rss version="2.0">\n'
-        yield '   <channel>\n'
-        yield '      <title>%s</title>\n'%app.config["BLOG_TITLE"]
-        yield '      <description>%s</title>\n'%app.config["BLOG_TAGLINE"]
-        yield '      <link>%s</link>\n'%app.config["BLOG_URL"]
-        for post in db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.desc()).all():
-            yield "         <item>\n"
-            yield "            <title>%s</title>\n"%post.title
-            if post.text:
-                yield "            <description>%s</description>\n"%post.render_content()
-            else:
-                yield "            <description>No content</description>\n"
-            yield "            <pubDate>%s</pubDate>\n"%post.created_at.strftime('%B %d, %Y')
-            yield "            <link>%s</link>\n"%("%s/%s"%(app.config["BLOG_URL"], post.slug ))
-            yield "            <guid>%s</guid>\n"%("%s/%s"%(app.config["BLOG_URL"], post.slug ))
-            yield "         </item>\n"
-        yield "   </channel>\n"
-        yield "</rss>"
+    posts = db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.desc()).limit(10).all()
 
-    return Response(generate_feed(), mimetype="application/rss+xml")
+    r = make_response(render_template('index.xml', posts=posts))
+    r.mimetype = "application/xml"
+    return r
 
 def slugify(text, delim=u'-'):
     """Generates an slightly worse ASCII-only slug."""
@@ -196,8 +184,14 @@ def slugify(text, delim=u'-'):
         word = normalize('NFKD', unicode(word)).encode('ascii', 'ignore')
         if word:
             result.append(word)
-    return unicode(delim.join(result))
-
+    slug = unicode(delim.join(result))
+    # This could have issues if a post is marked as draft, then live, then draft, then live and there are > 1 posts
+    # with the same slug. Oh well.
+    _c = db.session.query(Post).filter_by(slug=slug).count()
+    if _c > 0:
+        return "%s%s%s"%(slug, delim, _c)
+    else:
+        return slug
 
 if __name__ == "__main__":
     app.run()

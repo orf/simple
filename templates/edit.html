@@ -1,17 +1,29 @@
 {% extends "admin_template.html" %}
 
+{% block head %}
+    {% if post.draft %}
+        <script type="text/javascript">
+            function SaveTick(){
+                issueSaveAjax({{ post.id }}, false);
+                setTimeout("SaveTick()", 10000)
+            }
+            $(document).ready(function(){
+                setTimeout("SaveTick();", 10000);
+            })
+        </script>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
 
         <form accept-charset="UTF-8" action="" class="edit_post" id="edit_post_{{ post.id }}" method="post">
             <div class="contain">
 
                 <div class="expandingArea text-title">
-                    <pre><span></span><br></pre>
                     <textarea cols="40" id="post_title" name="post_title" placeholder="Title here" rows="1">{{ post.title }}</textarea>
                 </div>
                 <fieldset class="markdown">
                     <div class="expandingArea text-content">
-                        <pre><span></span><br></pre>
                         <textarea cols="40" id="post_content" name="post_content" placeholder="Write post here" rows="20">{{ post.text }}</textarea>
                     </div>
                 </fieldset>
@@ -26,7 +38,7 @@
                         <label for="post_draft">Draft</label>
                         <input name="post_draft" type="hidden" value="0" /><input id="post_draft" name="post_draft" type="checkbox" value="1" {% if post.draft %}checked{% endif %} />
                         {% if post.draft %}
-                            <a href onclick="issueSaveAjax({{ post.id }}, true)" target="_blank">Preview</a>
+                            <a href="#" onclick="issueSaveAjax({{ post.id }}, true); return false;" target="_blank">Preview</a>
                         {% else %}
                             <a href="{{  url_for('view_post_slug', slug=post.slug) }}" target="_blank">View live</a>
                         {% endif %}

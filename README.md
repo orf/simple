@@ -12,6 +12,10 @@ Installation
 Its quite simple. Go download Python 2.7+, Flask, Sqlalchemy and flask-sqlalchemy and you are good to go.
 To create a settings file run create_config.py and enter some details, then run simple.py.
 
+Example
+============
+You can see my blog running this software [here](http://tomforb.es).
+
 Screenshots
 ===========
 ![Admin](http://i.imgur.com/vWfOs.png)

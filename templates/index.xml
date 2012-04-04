@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>{{ config.BLOG_TITLE }}</title>
+        <description>{{ config.BLOG_TAGLINE }}</description>
+        <link>{{ config.BLOG_URL }}</link>
+        {% for post in posts %}
+        {% set p_url=config.BLOG_URL + url_for('view_post_slug', slug=post.slug) %}
+        <item>
+            <title>{{ post.title }}</title>
+            <description>{{ post.render_content() }}</description>
+            <pubDate>{{ post.created_at.strftime('%b %d, %Y') }}</pubDate>
+            <link>{{ p_url }}</link>
+            <guid>{{ p_url }}</guid>
+        </item>
+        {% endfor %}
+    </channel>
+</rss>

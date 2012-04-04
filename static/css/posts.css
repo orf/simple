@@ -21,27 +21,44 @@ body {
   color: #222; }
 
 body, textarea, pre, input {
-  font-family: 'Lato', Helvetica, sans-serif;
-  line-height: 1.8em;
-  font-size: 16px;
-  font-weight: 400; }
+    font-family: 'Lato', Helvetica, sans-serif;
+    line-height: 1.8em;
+    font-size: 15px;
+    font-weight: 400; }
 
 h1, h2, h3, h4, h5 {
   font-weight: 900;
   word-wrap: break-word;
   line-height: 1.3em; }
 
-h1, .expandingArea.text-title pre, .expandingArea.text-title textarea {
-  font-weight: 900;
-  font-size: 35px; }
+h1,
+.expandingArea.text-title pre,
+.expandingArea.text-title textarea {
+    font-weight: 900;
+    font-size: 30px; }
 
 p {
   color: #555; }
 
-a, a:visited a:active {
-  color: #000;
-  text-decoration: none;
-  border-bottom: 1px solid #ddd; }
+code.prettyprint {
+    line-height: 1.2em;
+}
+
+
+div.bottom_right {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 350px;
+}
+
+a,
+a:visited
+a:active {
+    color: #000;
+    text-decoration: none;
+    border-bottom: 1px solid #ddd; }
 
 a:hover {
   color: red; }
@@ -300,10 +317,11 @@ label {
 #admin .col ul li h3 a {
   border: none; }
 #admin textarea, #admin pre {
-  margin: 0;
-  padding: 0;
-  outline: 0;
-  border: 0; }
+    border: 1px solid rgba(128,128,128,.3);
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    border: 0; }
 #admin .expandingArea {
   position: relative; }
 #admin .expandingArea > textarea, #admin .expandingArea > pre {
@@ -311,17 +329,18 @@ label {
   white-space: pre-wrap;
   word-wrap: break-word; }
 #admin .expandingArea > textarea {
-  /* The border-box box model is used to allow
-   * padding whilst still keeping the overall width
-   * at exactly that of the containing element.
-   */
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  box-sizing: border-box;
-  width: 100%;
-  /* This height is used when JS is disabled */
-  height: 100px; }
+    /* The border-box box model is used to allow
+     * padding whilst still keeping the overall width
+     * at exactly that of the containing element.
+     */
+    overflow: hidden;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    /* This height is used when JS is disabled */
+    height: 100px; }
 #admin .expandingArea.active > textarea {
   /* Hide any scrollbars */
   overflow: hidden;
