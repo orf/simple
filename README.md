@@ -14,7 +14,7 @@ To create a settings file run create_config.py and enter some details, then run 
 
 Example
 ============
-You can see my blog running this software [here](http://tomforb.es).
+You can see my blog running this software [here](http://tomforb.es/simple).
 
 Screenshots
 ===========
