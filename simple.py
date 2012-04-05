@@ -5,7 +5,6 @@ import re
 from unicodedata import normalize
 from flaskext.sqlalchemy import SQLAlchemy
 import datetime
-from unicodedata import normalize
 import markdown
 
 app = Flask(__name__)
