@@ -8,6 +8,7 @@ def input_with_default(prompt, default):
 
 with open("settings.py", "w") as fd:
     print "Generating a Simple config file. Please answer some questions:"
+    fd.write("# -*- coding: utf-8 -*-\n\n")
     fd.write("POSTS_PER_PAGE = %s\n"%input_with_default("Posts per page", 5))
     fd.write("ADMIN_USERNAME = '%s'\n"%input_with_default("Admin username","admin"))
     fd.write("ADMIN_PASSWORD = '%s'\n"%generate_password_hash(input_with_default("Admin password","password")) )
