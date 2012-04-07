@@ -340,16 +340,16 @@ label {
     box-sizing: border-box;
     width: 100%;
     /* This height is used when JS is disabled */
-    height: 100px; }
+    height: 100px;
+    /* Remove WebKit user-resize widget */
+    resize: none; }
 #admin .expandingArea.active > textarea {
   /* Hide any scrollbars */
   overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
-  /* Remove WebKit user-resize widget */
-  resize: none; }
+  height: 100%; }
 #admin .expandingArea > pre {
   display: none; }
 #admin .expandingArea.active > pre {
