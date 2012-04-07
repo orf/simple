@@ -150,7 +150,8 @@ fieldset.markdown {
   border: none;
   background: none;
   line-height: 45px;
-  margin: 0 0 20px 0; }
+  margin: 0 0 20px 0 !important;
+  height: auto !important; }
 
 #post_content {
   border: none;
