@@ -143,14 +143,15 @@ fieldset.markdown {
   position: absolute;
   top: 4px;
   left: -60px;
-  background: url(/assets/markdown.png) no-repeat top left; }
+  background: url(../markdown.png) no-repeat top left; }
 
 #post_title {
   width: 100%;
   border: none;
   background: none;
   line-height: 45px;
-  margin: 0 0 20px 0; }
+  margin: 0 0 20px 0 !important;
+  height: auto !important; }
 
 #post_content {
   border: none;
@@ -340,16 +341,16 @@ label {
     box-sizing: border-box;
     width: 100%;
     /* This height is used when JS is disabled */
-    height: 100px; }
+    height: 100px;
+    /* Remove WebKit user-resize widget */
+    resize: none; }
 #admin .expandingArea.active > textarea {
   /* Hide any scrollbars */
   overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
-  /* Remove WebKit user-resize widget */
-  resize: none; }
+  height: 100%; }
 #admin .expandingArea > pre {
   display: none; }
 #admin .expandingArea.active > pre {

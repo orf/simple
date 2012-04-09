@@ -1,7 +1,7 @@
 // 100% stolen from yiransheng/simple
 $.fn.autogrow = function(options) {
 
-    this.filter('textarea').each(function() {
+    this.filter('textarea :not(#post_title)').each(function() {
 
         var $this       = $(this),
                 minHeight   = $this.height(),
