@@ -38,7 +38,7 @@ h1,
     font-size: 30px; }
 
 p {
-  color: #555; }
+  color: #1d1d1d; }
 
 code.prettyprint {
     line-height: 1.2em;
@@ -157,7 +157,7 @@ fieldset.markdown {
   margin: 0 0 80px 0; }
 
 .contain, #new_post, .edit_post {
-    text-align: center;
+    text-align: left;
     width: 880px;
     left: 15%;
 }
