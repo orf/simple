@@ -141,7 +141,7 @@ fieldset.markdown {
   position: absolute;
   top: 4px;
   left: -60px;
-  background: url(/assets/markdown.png) no-repeat top left; }
+}
 
 #post_title {
   width: 100%;
