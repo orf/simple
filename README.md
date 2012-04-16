@@ -21,7 +21,7 @@ This will start 4 gunicorn workers serving Simple. You can then use nginx or apa
 
 Example
 ============
-You can see my blog running this software [here](http://tomforb.es).
+You can see my blog running this software [here](http://tomforb.es/simple).
 
 Screenshots
 ===========
