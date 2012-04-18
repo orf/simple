@@ -38,7 +38,7 @@ def requires_authentication(f):
     def _auth_decorator(*args, **kwargs):
         auth = request.authorization
         if not auth or not (auth.username == app.config["ADMIN_USERNAME"]
-                            and hashlib.md5(auth.password).hexdigest() == app.config["ADMIN_PASSWORD"]):
+                            and generate_password_hash(auth.password) == app.config["ADMIN_PASSWORD"]):
             return Response("Could not authenticate you", 401, {"WWW-Authenticate":'Basic realm="Login Required"'})
         return f(*args, **kwargs)
 
