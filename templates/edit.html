@@ -18,10 +18,12 @@
         <form accept-charset="UTF-8" action="" class="edit_post" id="edit_post_{{ post.id }}" method="post">
             <div class="contain">
                 <div class="expandingArea text-title">
+                    <pre><span></span><br></pre>
                     <textarea cols="40" id="post_title" name="post_title" placeholder="Title here" rows="1">{{ post.title }}</textarea>
                 </div>
                 <fieldset class="markdown">
-                    <div class="expandingArea text-content">
+                    <div class="expandingArea text-content" id="edit_post_area">
+                        <pre><span></span><br></pre>
                         <textarea cols="40" id="post_content" name="post_content" placeholder="Write post here" rows="20">{{ post.text }}</textarea>
                     </div>
                 </fieldset>

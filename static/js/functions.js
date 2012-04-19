@@ -40,6 +40,29 @@ $.fn.autogrow = function(options) {
 };
 
 
+function makeExpandingArea(container) {
+    var area = container.querySelector('textarea'),
+            span = container.querySelector('span');
+
+    if (area.addEventListener) {
+        area.addEventListener('input', function() {
+            span.textContent = area.value;
+        }, false);
+        span.textContent = area.value;
+    } else if (area.attachEvent) {
+        // IE8 compatibility
+        area.attachEvent('onpropertychange', function() {
+            span.innerText = area.value;
+        });
+        span.innerText = area.value;
+    }
+
+    // Enable extra CSS
+    container.className += ' active';
+}
+
+
+
 function issueSaveAjax(id, redirect){
     var ptitle   = $("#post_title").val();
     var pcontent = $("#post_content").val();
@@ -59,5 +82,8 @@ function issueSaveAjax(id, redirect){
 }
 
 $(function() {
-    $('textarea').autogrow();
+    var x = document.getElementById("edit_post_area");
+    if (x != null) {
+        makeExpandingArea(x);
+    }
 });
