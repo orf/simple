@@ -7,6 +7,7 @@ from flaskext.sqlalchemy import SQLAlchemy
 import datetime
 from unicodedata import normalize
 import markdown
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 app.config.from_object('settings')
@@ -38,7 +39,7 @@ def requires_authentication(f):
     def _auth_decorator(*args, **kwargs):
         auth = request.authorization
         if not auth or not (auth.username == app.config["ADMIN_USERNAME"]
-                            and generate_password_hash(auth.password) == app.config["ADMIN_PASSWORD"]):
+                            and check_password_hash(app.config["ADMIN_PASSWORD"], auth.password)):
             return Response("Could not authenticate you", 401, {"WWW-Authenticate":'Basic realm="Login Required"'})
         return f(*args, **kwargs)
 
