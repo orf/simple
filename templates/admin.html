@@ -1,5 +1,10 @@
 {% extends "admin_template.html" %}
 
+{% block css %}
+<link href="{{ url_for('static', filename='css/_normalize.css') }}" type="text/css" media="screen" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/posts.css') }}" type="text/css" media="screen" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <div id="drafts" class="col">
     <h1>Drafts <a href="{{ url_for('new_post') }}" class="button">New draft</a></h1>

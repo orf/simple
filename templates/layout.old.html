@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link href="{{ url_for('static', filename='css/_normalize.css') }}" type="text/css" media="screen" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/posts.css') }}" type="text/css" media="screen" rel="stylesheet">
+    <meta name="author" content="{{ config.AUTHOR }}">
+    <link href="{{ url_for('feed') }}" rel="alternate" title="RSS" type="application/rss+xml" />
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,900' rel='stylesheet' type='text/css' />
+    <link href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body onload="prettyPrint()">
+<header >
+    <h1><a href="{{ url_for('index') }}">{{ config.BLOG_TITLE }}</a></h1>
+    <span>{{ config.BLOG_TAGLINE }}</span>
+    <ul>
+        {% if config.GITHUB_USERNAME %}
+            <li><a href="https://github.com/{{ config.GITHUB_USERNAME }}/">Github</a></li>
+        {% endif %}
+        {% if config.CONTACT_EMAIL %}
+            <li><a href="mailto:{{ config.CONTACT_EMAIL }}?subject:Howdy">Email me</a></li>
+        {% endif %}
+        {% if config.TWITTER_HANDLE %}
+            <li><a href="https://twitter.com/{{ config.TWITTER_HANDLE }}/">Twitter</a></li>
+        {% endif %}
+        {% if config.GOOGLE_PLUS_PROFILE %}
+            <li><a href="https://plus.google.com/{{ config.GOOGLE_PLUS_PROFILE }}/posts">Google+</a></li>
+        {% endif %}
+
+        <li><a href="{{ url_for('feed') }}">Feed</a></li>
+        {% block sidebar %}{% endblock %}
+    </ul>
+    <span class="powered-by">
+      Powered by <a href="http://github.com/orf/simple">Simple</a>,
+        inspired by <a href="https://github.com/NateW/obtvse">Obtvse</a>
+      {# <% if is_admin? %> &nbsp;&middot;&nbsp; <a href="/admin">Admin</a><% end %> #}
+  </span>
+
+</header>
+
+<div id="container">
+    <time>
+        {% if post %}
+            Posted {{ post.created_at.strftime('%B %d, %Y') }}
+            {% if post.created_at.strftime('%B %d, %Y') != post.updated_at.strftime('%B %d, %Y') %}
+                , Updated {{ post.updated_at.strftime('%B %d, %Y') }}
+            {% endif %}
+        {% else %}
+            {{ now.strftime('%B %d, %Y') }}
+        {% endif %}
+    </time>
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+<!-- Google Analytics -->
+<script>
+    var _gaq=[['_setAccount','{{ config["ANALYTICS_ID"] }}'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+        g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+        s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+</body>
+</html>

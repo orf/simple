@@ -6,14 +6,10 @@
 
     {% for post in posts %}
         <section id="post-{{ post.id }}">
-            <div class="post contain">
+            <div class="post_container">
                 <h1><a href="{{ url_for('view_post_slug', slug=post.slug, pid=current_page) }}">{{ post.title }}</a></h1>
+                <br/>
                 {{ post.render_content()|safe }}
-            {% if is_admin %}
-                <ul class="actions">
-                    <li><a href="{{ url_for('edit', post_id=post.id) }}">Edit</a></li>
-                </ul>
-            {% endif %}
             </div>
         </section>
     {% endfor %}
@@ -21,12 +17,12 @@
     <nav class="pagination">
     {% if current_page > 0 %}
         <span class="prev">
-            <a href="{{ url_for("index", page=current_page-1) }}">< Previous</a>
+            <a href="{{ url_for("index", page=current_page - 1) }}">< Previous</a>
         </span>
     {% endif %}
     {% if is_more %}
         <span class="next">
-            <a href="{{ url_for("index", page=current_page+1) }}">Next ></a>
+            <a href="{{ url_for("index", page=current_page + 1) }}">Next ></a>
         </span>
     {% endif %}
     </nav>

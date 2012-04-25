@@ -1,5 +1,11 @@
 {% extends "admin_template.html" %}
 
+{% block css %}
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+    <link href="{{ url_for('static', filename='css/layout.css') }}" type="text/css" media="screen" rel="stylesheet">
+    <script src="https://raw.github.com/coreyti/showdown/master/compressed/showdown.js" type="text/javascript"></script>
+{% endblock %}
+
 {% block head %}
     {% if post.draft %}
         <script type="text/javascript">
@@ -14,20 +20,60 @@
     {% endif %}
 {% endblock %}
 
+
 {% block content %}
-        <form accept-charset="UTF-8" action="" class="edit_post" id="edit_post_{{ post.id }}" method="post">
-            <div class="contain">
-                <div class="expandingArea text-title">
-                    <pre><span></span><br></pre>
-                    <textarea cols="40" id="post_title" name="post_title" placeholder="Title here" rows="1">{{ post.title }}</textarea>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <form accept-charset="UTF-8" action="" class="edit_post" id="edit_post" method="post">
+                <div class="sidebar-nav-fixed">
+                    <p><a class="btn btn-inverse" href="{{ url_for("admin") }}">Admin</a></p>
+                    <p><a class="btn btn-inverse" href="{{ url_for('delete', id=post.id, next="admin") }}">Delete</a> </p>
+                    <p>
+                        <label for="post_draft">Draft</label>
+                        <input name="post_draft" type="hidden" value="0" /><input id="post_draft" name="post_draft" type="checkbox" value="1" {% if post.draft %}checked{% endif %} />
+                    </p>
+                    <p>
+                        {% if post.draft %}
+                            <a class="btn btn-inverse" href="#" onclick="issueSaveAjax({{ post.id }}, true); return false;" target="_blank">Preview</a>
+                        {% else %}
+                            <a class="btn btn-inverse" href="{{  url_for('view_post_slug', slug=post.slug) }}" target="_blank">View live</a>
+                        {% endif %}
+                    </p>
+                    <p>
+                        <button class="btn btn-inverse" onclick="$('#edit_post').submit()">Save</button>
+                    </p>
                 </div>
-                <fieldset class="markdown">
-                    <div class="expandingArea text-content" id="edit_post_area">
-                        <pre><span></span><br></pre>
-                        <textarea cols="40" id="post_content" name="post_content" placeholder="Write post here" rows="20">{{ post.text }}</textarea>
-                    </div>
-                </fieldset>
-            </div>
+
+                <div class="span-fixed-sidebar">
+
+                    <div class="span12" style="padding: 60px 0;">
+                            <div class="row">
+                                <div class="span6 offset3">
+                                    <div class="expandingArea text-title">
+                                        <pre><span></span><br></pre>
+                                        <textarea class="post_title" id="post_title" name="post_title" placeholder="Title here" rows="1">{{ post.title }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="span6 offset3">
+                                    <div class="expandingArea text-content" id="edit_post_area">
+                                        <pre><span></span><br></pre>
+                                        <textarea cols="40" id="post_content" name="post_content" placeholder="Write post here" rows="20">{{ post.text }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                     </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content2 %}
+
+
             <div id="publish-bar">
                 <div class="contain">
                     <div>
@@ -36,20 +82,7 @@
                     <div>
                         <a href="{{ url_for('delete', id=post.id, next="admin" ) }}" class="delete-bar" data-confirm="Are you sure?" rel="nofollow">Delete</a>
                     </div>
-                    <div style="display: inline-block;">
-                        <label for="post_draft">Draft</label>
-                        <input name="post_draft" type="hidden" value="0" /><input id="post_draft" name="post_draft" type="checkbox" value="1" {% if post.draft %}checked{% endif %} />
-                    </div>
-                    <div>
-                        {% if post.draft %}
-                            <a href="#" onclick="issueSaveAjax({{ post.id }}, true); return false;" target="_blank">Preview</a>
-                        {% else %}
-                            <a href="{{  url_for('view_post_slug', slug=post.slug) }}" target="_blank">View live</a>
-                        {% endif %}
-                    </div>
-                    <div>
-                        <input name="commit" type="submit" value="Save" target="_blank"/>
-                    </div>
+
                 </div>
             </div>
         </form>

@@ -9,17 +9,20 @@
 
 {% block content %}
     <section id="post-{{ post.id }}">
-        <div class="post contain">
+        <div class="post_container">
             <h1>{{ post.title }}</h1>
+            <br/>
             {{ post.render_content()|safe }}
             {% if is_admin %}
-                <ul class="actions">
-                    <li><a href="{{ url_for('edit', post_id=post.id) }}">Edit</a></li>
-                </ul>
+
             {% endif %}
         </div>
 
-        <a class="button space-top" href="{{ url_for('index', page=pid) }}">Back to Blog</a>
-
+        <div  class="post_container">
+            <a class="btn btn-inverse" href="{{ url_for('index', page=pid) }}">Back to Blog</a>
+            {% if is_admin %}
+            <a class="btn btn-inverse" href="{{ url_for('edit', id=post.id) }}">Edit post</a>
+            {% endif %}
+        </div>
     </section>
 {% endblock %}
