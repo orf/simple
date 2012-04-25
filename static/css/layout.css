@@ -164,3 +164,15 @@ header li a:hover {
     display: block;
     /* Hide the text; just using it for sizing */
     visibility: hidden; }
+
+.sidebar-nav-fixed {
+    padding: 9px 0;
+    position:fixed;
+    left:20px;
+    top:60px;
+    width:100px;
+}
+
+.span-fixed-sidebar {
+    margin-left: 120px;
+}
