@@ -14,16 +14,17 @@
         </section>
     {% endfor %}
 
-    <nav class="pagination">
-    {% if current_page > 0 %}
-        <span class="prev">
-            <a href="{{ url_for("index", page=current_page - 1) }}">< Previous</a>
-        </span>
-    {% endif %}
-    {% if is_more %}
-        <span class="next">
-            <a href="{{ url_for("index", page=current_page + 1) }}">Next ></a>
-        </span>
-    {% endif %}
-    </nav>
+    <ul class="pager">
+        {% if current_page > 0 %}
+            <li class="previous">
+                <a href="{{ url_for("index", page=current_page - 1) }}">&larr; Previous</a>
+            </li>
+        {% endif %}
+
+        {% if is_more %}
+            <li class="next">
+                <a href="{{ url_for("index", page=current_page + 1) }}">Next  &rarr;</a>
+            </li>
+        {% endif %}
+    </ul>
 {% endblock %}

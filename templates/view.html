@@ -3,6 +3,14 @@
 {% block title %}{{ post.title }} - {{ config.BLOG_TITLE }}{% endblock %}
 
 {% block sidebar %}
+    {% if is_admin %}
+        <br />
+        <li>
+            <p>
+                <a  href="{{ url_for('edit', id=post.id) }}">Edit post</a>
+            </p>
+        </li>
+    {% endif %}
     <br />
     Views: {{ post.views }}
 {% endblock %}
@@ -20,9 +28,6 @@
 
         <div  class="post_container">
             <a class="btn btn-inverse" href="{{ url_for('index', page=pid) }}">Back to Blog</a>
-            {% if is_admin %}
-            <a class="btn btn-inverse" href="{{ url_for('edit', id=post.id) }}">Edit post</a>
-            {% endif %}
         </div>
     </section>
 {% endblock %}

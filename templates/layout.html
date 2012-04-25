@@ -32,7 +32,15 @@
                                 <li><p><a href="https://plus.google.com/{{ config.GOOGLE_PLUS_PROFILE }}/posts">Google+</a></p></li>
                             {% endif %}
 
-                            <li><a href="{{ url_for('feed') }}">Feed</a></li>
+                            <li>
+                                <p><a href="{{ url_for('feed') }}">Feed</a></p>
+                            </li>
+
+                            {% if is_admin %}
+                                <li>
+                                    <p><a href="{{ url_for('admin') }}">Admin</a></p>
+                                </li>
+                            {% endif %}
 
                             {% block sidebar %}{% endblock %}
                         </ul>
