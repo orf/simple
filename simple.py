@@ -2,7 +2,7 @@ from functools import wraps
 from flask import render_template, request, Flask, flash, redirect, url_for, abort, jsonify, Response, make_response
 import re
 from unicodedata import normalize
-from flaskext.sqlalchemy import SQLAlchemy
+from flask.ext.sqlalchemy import SQLAlchemy
 import datetime
 import markdown
 from werkzeug.security import check_password_hash
