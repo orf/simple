@@ -79,8 +79,11 @@ def view_post_slug(slug):
     except Exception:
         return abort(404)
 
-    db.session.query(Post).filter_by(slug=slug).update({Post.views:Post.views+1})
-    db.session.commit()
+    if not any(botname in request.user_agent.string for botname in ['Googlebot','Slurp','Twiceler','msnbot',
+                                                                    'KaloogaBot','YodaoBot','"Baiduspider',
+                                                                    'googlebot','Speedy Spider','DotBot']):
+        db.session.query(Post).filter_by(slug=slug).update({Post.views:Post.views+1})
+        db.session.commit()
 
     pid = request.args.get("pid", "0")
     return render_template("view.html", post=post, pid=pid, is_admin=is_admin())
