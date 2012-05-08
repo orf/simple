@@ -6,12 +6,15 @@ from flask.ext.sqlalchemy import SQLAlchemy
 import datetime
 import markdown
 from werkzeug.security import check_password_hash
+import time
 
 app = Flask(__name__)
 app.config.from_object('settings')
 db = SQLAlchemy(app)
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+
+markdown_parser = markdown.Markdown(extensions=['fenced_code'], output_format="html5", safe_mode=True)
 
 class Post(db.Model):
     __tablename__ = "posts"
@@ -25,7 +28,7 @@ class Post(db.Model):
     updated_at = db.Column(db.DateTime)
 
     def render_content(self):
-        return markdown.Markdown(extensions=['fenced_code'], output_format="html5", safe_mode=True).convert(self.text)
+        return markdown_parser.convert(self.text)
 
 try:
     db.create_all()
