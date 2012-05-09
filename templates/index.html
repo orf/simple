@@ -7,7 +7,9 @@
     {% for post in posts %}
         <section id="post-{{ post.id }}">
             <div class="post_container">
-                <h1><a href="{{ url_for('view_post_slug', slug=post.slug, pid=current_page) }}">{{ post.title }}</a></h1>
+                <div class="post_header">
+                    <h1><a href="{{ url_for('view_post_slug', slug=post.slug, pid=current_page) }}">{{ post.title }}</a></h1>
+                </div>
                 <br/>
                 {{ post.render_content()|safe }}
             </div>

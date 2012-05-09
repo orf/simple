@@ -17,7 +17,7 @@ time {
 
 .post_container > p {
     left: 15%;
-    font-family: 'Lato', Helvetica, sans-serif;
+    font-family: 'Expletus Sans', cursive;
     line-height: 1.8em;
     font-size: 15px;
     font-weight: 400;
@@ -47,7 +47,17 @@ h1,
 h1, h2, h3, h4, h5 {
     font-weight: 900;
     word-wrap: break-word;
-    line-height: 1.3em; }
+    line-height: 1.3em;
+}
+
+.post_container > h1,h2,h3,h4,h5{
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+.post_header {
+    margin: 0em;
+}
 
 h1 {
     font-weight: 900;
@@ -80,7 +90,7 @@ a:hover {
     color: red; }
 
 body, textarea, pre, input {
-    font-family: 'Lato', Helvetica, sans-serif;
+    font-family: 'Nova Flat', cursive;
     line-height: 1.8em;
     font-size: 15px;
     font-weight: 400; }
