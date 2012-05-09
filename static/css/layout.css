@@ -89,11 +89,15 @@ ul {
 a:hover {
     color: red; }
 
-body, textarea, pre, input {
-    font-family: 'Nova Flat', cursive;
+body, pre, input {
+    font-family: 'Expletus Sans', cursive;
     line-height: 1.8em;
     font-size: 15px;
     font-weight: 400; }
+
+textarea {
+    font-family: 'Lato', Helvetica, sans-serif;
+}
 
 .post_title {
     line-height: 1.2em;
