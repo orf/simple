@@ -1,12 +1,17 @@
-from functools import wraps
-from flask import render_template, request, Flask, flash, redirect, url_for, abort, jsonify, Response, make_response
+""" simple """
+
+# python imports
 import re
-from unicodedata import normalize
-from flask.ext.sqlalchemy import SQLAlchemy
 import datetime
+from functools import wraps
+from unicodedata import normalize
+
+# web stuff and markdown imports
 import markdown
+from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash
-import time
+from flask import render_template, request, Flask, flash, redirect, url_for, \
+                  abort, jsonify, Response, make_response
 
 app = Flask(__name__)
 app.config.from_object('settings')
@@ -14,9 +19,19 @@ db = SQLAlchemy(app)
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
-markdown_parser = markdown.Markdown(extensions=['fenced_code'], output_format="html5", safe_mode=True)
+MARKDOWN_PARSER = markdown.Markdown(extensions=['fenced_code'], 
+                                    output_format="html5", 
+                                    safe_mode=True)
 
 class Post(db.Model):
+    def __init__(self, title=None, created_at=None):
+        if title:
+            self.title = title
+            self.slug = slugify(title)
+        if created_at:
+            self.created_at = created_at
+            self.updated_at = created_at
+
     __tablename__ = "posts"
     id    = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String())
@@ -28,7 +43,7 @@ class Post(db.Model):
     updated_at = db.Column(db.DateTime)
 
     def render_content(self):
-        return markdown_parser.convert(self.text)
+        return MARKDOWN_PARSER.convert(self.text)
 
 try:
     db.create_all()
@@ -38,39 +53,63 @@ except Exception:
 def is_admin():
     auth = request.authorization
     if not auth or not (auth.username == app.config["ADMIN_USERNAME"]
-                        and check_password_hash(app.config["ADMIN_PASSWORD"], auth.password)):
+                        and check_password_hash(app.config["ADMIN_PASSWORD"], 
+                                                auth.password)):
         return False
     return True
 
-def requires_authentication(f):
-    @wraps(f)
+def requires_authentication(func):
+    """ function decorator for handling authentication """
+    @wraps(func)
     def _auth_decorator(*args, **kwargs):
+        """ does the wrapping """
         if not is_admin():
-            return Response("Could not authenticate you", 401, {"WWW-Authenticate":'Basic realm="Login Required"'})
-        return f(*args, **kwargs)
+            return Response("Could not authenticate you", 
+                            401, 
+                            {"WWW-Authenticate":'Basic realm="Login Required"'})
+        return func(*args, **kwargs)
 
     return _auth_decorator
 
 @app.route("/")
 def index():
+    """ Index Page. Here is where the magic starts """
     page = request.args.get("page", 0, type=int)
-    posts_master = db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.desc())
+    posts_master = db.session.query(Post)\
+                       .filter_by(draft=False)\
+                       .order_by(Post.created_at.desc())
+    
     posts_count = posts_master.count()
 
-    posts = posts_master.limit(app.config["POSTS_PER_PAGE"]).offset(page*app.config["POSTS_PER_PAGE"]).all()
-    is_more = posts_count > ((page*app.config["POSTS_PER_PAGE"]) + app.config["POSTS_PER_PAGE"])
+    posts = posts_master\
+                .limit(app.config["POSTS_PER_PAGE"])\
+                .offset(page * app.config["POSTS_PER_PAGE"])\
+                .all()
 
-    return render_template("index.html", posts=posts, now=datetime.datetime.now(),
-                                         is_more=is_more, current_page=page, is_admin=is_admin())
+    # Sorry for the verbose names, but this seemed like a sensible
+    # thing to do.
+    last_possible_post_on_page = page * app.config["POSTS_PER_PAGE"]\
+                               + app.config["POSTS_PER_PAGE"]
+    there_is_more = posts_count > last_possible_post_on_page
+
+    return render_template("index.html", 
+                           posts=posts, 
+                           now=datetime.datetime.now(),
+                           is_more=there_is_more, 
+                           current_page=page, 
+                           is_admin=is_admin())
 
 @app.route("/<int:post_id>")
 def view_post(post_id):
+    """ view_post renders a post and returns the Response object """
     try:
         post = db.session.query(Post).filter_by(id=post_id, draft=False).one()
     except Exception:
         return abort(404)
 
-    db.session.query(Post).filter_by(id=post_id).update({Post.views:Post.views+1})
+    db.session.query(Post)\
+        .filter_by(id=post_id)\
+        .update({Post.views:Post.views + 1})
     db.session.commit()
 
     return render_template("view.html", post=post, is_admin=is_admin())
@@ -78,14 +117,18 @@ def view_post(post_id):
 @app.route("/<slug>")
 def view_post_slug(slug):
     try:
-        post = db.session.query(Post).filter_by(slug=slug,draft=False).one()
+        post = db.session.query(Post).filter_by(slug=slug, draft=False).one()
     except Exception:
+        #TODO: Better exception
         return abort(404)
 
-    if not any(botname in request.user_agent.string for botname in ['Googlebot','Slurp','Twiceler','msnbot',
-                                                                    'KaloogaBot','YodaoBot','"Baiduspider',
-                                                                    'googlebot','Speedy Spider','DotBot']):
-        db.session.query(Post).filter_by(slug=slug).update({Post.views:Post.views+1})
+    if not any(botname in request.user_agent.string for botname in 
+                ['Googlebot',  'Slurp',         'Twiceler',     'msnbot',
+                 'KaloogaBot', 'YodaoBot',      '"Baiduspider',
+                 'googlebot',  'Speedy Spider', 'DotBot']):
+        db.session.query(Post)\
+            .filter_by(slug=slug)\
+            .update({Post.views:Post.views+1})
         db.session.commit()
 
     pid = request.args.get("pid", "0")
@@ -94,23 +137,21 @@ def view_post_slug(slug):
 @app.route("/new", methods=["POST", "GET"])
 @requires_authentication
 def new_post():
-    post = Post()
-    post.title = request.form.get("title","untitled")
-    post.slug = slugify(post.title)
-    post.created_at = datetime.datetime.now()
-    post.updated_at = datetime.datetime.now()
+    post = Post(title=request.form.get("title","untitled"),
+                created_at=datetime.datetime.now())
 
     db.session.add(post)
     db.session.commit()
 
     return redirect(url_for("edit", id=post.id))
 
-@app.route("/edit/<int:id>", methods=["GET","POST"])
+@app.route("/edit/<int:post_id>", methods=["GET","POST"])
 @requires_authentication
-def edit(id):
+def edit(post_id):
     try:
-        post = db.session.query(Post).filter_by(id=id).one()
+        post = db.session.query(Post).filter_by(id=post_id).one()
     except Exception:
+        #TODO: better exception
         return abort(404)
 
     if request.method == "GET":
@@ -129,36 +170,42 @@ def edit(id):
 
         db.session.add(post)
         db.session.commit()
-        return redirect(url_for("edit", id=id))
+        return redirect(url_for("edit", id=post_id))
 
-@app.route("/delete/<int:id>", methods=["GET","POST"])
+@app.route("/delete/<int:post_id>", methods=["GET","POST"])
 @requires_authentication
-def delete(id):
+def delete(post_id):
     try:
-        post = db.session.query(Post).filter_by(id=id).one()
+        post = db.session.query(Post).filter_by(id=post_id).one()
     except Exception:
-        flash("Error deleting post ID %s"%id, category="error")
+        # TODO: define better exceptions for db failure.
+        flash("Error deleting post ID %s"%post_id, category="error")
     else:
         db.session.delete(post)
         db.session.commit()
 
-    return redirect(request.args.get("next","") or request.referrer or url_for('index'))
+    return redirect(request.args.get("next","") 
+        or request.referrer 
+        or url_for('index'))
 
 @app.route("/admin", methods=["GET", "POST"])
 @requires_authentication
 def admin():
-    drafts = db.session.query(Post).filter_by(draft=True)\
-                                          .order_by(Post.created_at.desc()).all()
-    posts  = db.session.query(Post).filter_by(draft=False)\
-                                          .order_by(Post.created_at.desc()).all()
+    drafts = db.session.query(Post)\
+                 .filter_by(draft=True)\
+                 .order_by(Post.created_at.desc()).all()
+    posts  = db.session.query(Post)\
+                 .filter_by(draft=False)\
+                 .order_by(Post.created_at.desc()).all()
     return render_template("admin.html", drafts=drafts, posts=posts)
 
-@app.route("/admin/save/<int:id>", methods=["POST"])
+@app.route("/admin/save/<int:post_id>", methods=["POST"])
 @requires_authentication
-def save_post(id):
+def save_post(post_id):
     try:
-        post = db.session.query(Post).filter_by(id=id).one()
+        post = db.session.query(Post).filter_by(id=post_id).one()
     except Exception:
+        # TODO Better exception
         return abort(404)
     if post.title != request.form.get("title", ""):
         post.title = request.form.get("title","")
@@ -169,23 +216,28 @@ def save_post(id):
     db.session.commit()
     return jsonify(success=True)
 
-@app.route("/preview/<int:id>")
+@app.route("/preview/<int:post_id>")
 @requires_authentication
-def preview(id):
+def preview(post_id):
     try:
-        post = db.session.query(Post).filter_by(id=id).one()
+        post = db.session.query(Post).filter_by(id=post_id).one()
     except Exception:
+        # TODO: Better exception
         return abort(404)
 
     return render_template("post_preview.html", post=post)
 
 @app.route("/posts.rss")
 def feed():
-    posts = db.session.query(Post).filter_by(draft=False).order_by(Post.created_at.desc()).limit(10).all()
+    posts = db.session.query(Post)\
+                .filter_by(draft=False)\
+                .order_by(Post.created_at.desc())\
+                .limit(10)\
+                .all()
 
-    r = make_response(render_template('index.xml', posts=posts))
-    r.mimetype = "application/xml"
-    return r
+    response = make_response(render_template('index.xml', posts=posts))
+    response.mimetype = "application/xml"
+    return response
 
 def slugify(text, delim=u'-'):
     """Generates an slightly worse ASCII-only slug."""
@@ -195,11 +247,11 @@ def slugify(text, delim=u'-'):
         if word:
             result.append(word)
     slug = unicode(delim.join(result))
-    # This could have issues if a post is marked as draft, then live, then draft, then live and there are > 1 posts
-    # with the same slug. Oh well.
-    _c = db.session.query(Post).filter_by(slug=slug).count()
-    if _c > 0:
-        return "%s%s%s"%(slug, delim, _c)
+    # This could have issues if a post is marked as draft, then live, then 
+    # draft, then live and there are > 1 posts with the same slug. Oh well.
+    count = db.session.query(Post).filter_by(slug=slug).count()
+    if count > 0:
+        return "%s%s%s" % (slug, delim, count)
     else:
         return slug
 

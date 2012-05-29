@@ -1,25 +1,38 @@
+""" utility for generating a configuration file for a simple blog """
 from werkzeug.security import generate_password_hash
 
 def input_with_default(prompt, default):
-    x = raw_input("%s (Default %s) "%(prompt, default))
-    if not x:
+    """ Small wrapper around raw_input for prompting and defaulting """
+    response = raw_input("%s (Default %s) "%(prompt, default))
+    if not response:
         return default
-    return x
+    return response
+
+print "Generating a Simple config file. Please answer some questions:"
+SETTINGS = (
+    input_with_default("Posts per page", 5),
+    input_with_default("Admin username","admin"),
+    generate_password_hash(input_with_default("Admin password","password")), 
+    input_with_default("Google analytics ID",""),
+    input_with_default("Database URI","sqlite:///simple.db"),
+    input_with_default("Github Username", ""),
+    input_with_default("Contact Email", ""),
+    input_with_default("Blog title", ""),
+    input_with_default("Blog tagline", ""),
+    input_with_default("Blog URL (e.g. /blog)",""))
 
 with open("settings.py", "w") as fd:
-    print "Generating a Simple config file. Please answer some questions:"
-    fd.write("# -*- coding: utf-8 -*-\n\n")
-    fd.write("POSTS_PER_PAGE = %s\n"%input_with_default("Posts per page", 5))
-    fd.write("ADMIN_USERNAME = '%s'\n"%input_with_default("Admin username","admin"))
-    fd.write("ADMIN_PASSWORD = '%s'\n"%generate_password_hash(input_with_default("Admin password","password")) )
-    fd.write("ANALYTICS_ID = '%s'\n"%input_with_default("Google analytics ID",""))
-    fd.write('SQLALCHEMY_DATABASE_URI = "%s"\n'%input_with_default("Database URI","sqlite:///simple.db"))
-    fd.write("GITHUB_USERNAME = '%s'\n"%input_with_default("Github Username", ""))
-    fd.write("CONTACT_EMAIL = '%s'\n"%input_with_default("Contact Email", ""))
-    fd.write("BLOG_TITLE = '%s'\n"%input_with_default("Blog title", ""))
-    fd.write("BLOG_TAGLINE = '%s'\n"%input_with_default("Blog tagline", ""))
-    fd.write("BLOG_URL = '%s'\n"%input_with_default("Blog URL",""))
+    fd.write("""# -*- coding: utf-8 -*-\n
+POSTS_PER_PAGE = %s
+ADMIN_USERNAME = '%s'
+ADMIN_PASSWORD = '%s'
+ANALYTICS_ID = '%s'
+SQLALCHEMY_DATABASE_URI = "%s"
+GITHUB_USERNAME = '%s'
+CONTACT_EMAIL = '%s'
+BLOG_TITLE = '%s'
+BLOG_TAGLINE = '%s'
+BLOG_URL = '%s'\n""" % SETTINGS)
     fd.flush()
 
 print "Created!"
-raw_input()
