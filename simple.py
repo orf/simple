@@ -143,7 +143,7 @@ def new_post():
     db.session.add(post)
     db.session.commit()
 
-    return redirect(url_for("edit", id=post.id))
+    return redirect(url_for("edit", post_id=post.id))
 
 @app.route("/edit/<int:post_id>", methods=["GET","POST"])
 @requires_authentication
@@ -170,7 +170,7 @@ def edit(post_id):
 
         db.session.add(post)
         db.session.commit()
-        return redirect(url_for("edit", id=post_id))
+        return redirect(url_for("edit", post_id=post_id))
 
 @app.route("/delete/<int:post_id>", methods=["GET","POST"])
 @requires_authentication
