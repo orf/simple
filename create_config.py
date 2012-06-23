@@ -30,8 +30,8 @@ ANALYTICS_ID = '%s'
 SQLALCHEMY_DATABASE_URI = "%s"
 GITHUB_USERNAME = '%s'
 CONTACT_EMAIL = '%s'
-BLOG_TITLE = '%s'
-BLOG_TAGLINE = '%s'
+BLOG_TITLE = "%s"
+BLOG_TAGLINE = "%s"
 BLOG_URL = '%s'\n""" % SETTINGS)
     fd.flush()
 
