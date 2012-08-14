@@ -99,6 +99,12 @@ def index():
                            current_page=page, 
                            is_admin=is_admin())
 
+@app.route("/style.css")
+def render_font_style():
+    t = render_template("font_style.css",
+                            font_name=app.config["FONT_NAME"])
+    return Response(t, mimetype="text/css")
+
 @app.route("/<int:post_id>")
 def view_post(post_id):
     """ view_post renders a post and returns the Response object """

@@ -15,13 +15,7 @@ time {
     padding: 26px 0 40px 50px;
 }
 
-.post_container > p {
-    left: 15%;
-    font-family: 'Source Sans Pro', sans-serif;
-    line-height: 1.8em;
-    font-size: 15px;
-    font-weight: 400;
-}
+
 
 .sidebar {
     position:fixed;
@@ -89,11 +83,6 @@ ul {
 a:hover {
     color: red; }
 
-body, pre, input {
-    font-family: 'Source Sans Pro', sans-serif;
-    line-height: 1.8em;
-    font-size: 15px;
-    font-weight: 400; }
 
 textarea {
     font-family: 'Lato', Helvetica, sans-serif;
