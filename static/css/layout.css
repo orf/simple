@@ -17,7 +17,7 @@ time {
 
 .post_container > p {
     left: 15%;
-    font-family: 'Expletus Sans', cursive;
+    font-family: 'Source Sans Pro', sans-serif;
     line-height: 1.8em;
     font-size: 15px;
     font-weight: 400;
@@ -90,7 +90,7 @@ a:hover {
     color: red; }
 
 body, pre, input {
-    font-family: 'Expletus Sans', cursive;
+    font-family: 'Source Sans Pro', sans-serif;
     line-height: 1.8em;
     font-size: 15px;
     font-weight: 400; }
