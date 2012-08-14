@@ -1,0 +1,13 @@
+.post_container > p {
+    left: 15%;
+    font-family: "{{ font_name }}", sans-serif;
+    line-height: 1.8em;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+body, pre, input {
+    font-family: "{{ font_name }}", sans-serif;
+    line-height: 1.8em;
+    font-size: 15px;
+    font-weight: 400; }
