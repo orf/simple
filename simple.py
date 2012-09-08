@@ -62,6 +62,7 @@ class Post(db.Model):
         return text
 
     def set_content(self, content):
+        cache.delete("post_%s"%self.id)
         self.text = content
 
 
