@@ -10,8 +10,13 @@
                 <div class="post_header">
                     <h1><a href="{{ url_for('view_post_slug', slug=post.slug, pid=current_page) }}">{{ post.title }}</a></h1>
                 </div>
-                <br/>
-                {{ post.render_content()|safe }}
+
+                {% if config.get('POST_CONTENT_ON_HOMEPAGE',True) %}
+                    <br/>
+                    {{ post.render_content()|safe }}
+                {% else %}
+                    <p style="color: #999;">{{ post.created_at.strftime('%B %d, %Y') }}</p>
+                {% endif %}
             </div>
         </section>
     {% endfor %}

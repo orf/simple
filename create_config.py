@@ -11,6 +11,7 @@ def input_with_default(prompt, default):
 print "Generating a Simple config file. Please answer some questions:"
 SETTINGS = (
     input_with_default("Posts per page", 5),
+    input_with_default("Show the post content on the homepage","y").lower()[0] == "y",
     input_with_default("Admin username","admin"),
     generate_password_hash(input_with_default("Admin password","password")), 
     input_with_default("Google analytics ID",""),
@@ -19,13 +20,14 @@ SETTINGS = (
     input_with_default("Contact Email", ""),
     input_with_default("Blog title", ""),
     input_with_default("Blog tagline", ""),
-    input_with_default("Blog URL (e.g. /blog)",""),
-    input_with_default("Font Name: ","Source Sans Pro").replace(" ","+")
+    input_with_default("Blog URL (e.g. /blog)","/"),
+    input_with_default("Font Name (Selected from google font library): ","Source Sans Pro").replace(" ","+")
 )
 
 with open("settings.py", "w") as fd:
     fd.write("""# -*- coding: utf-8 -*-\n
 POSTS_PER_PAGE = %s
+POST_CONTENT_ON_HOMEPAGE = %s
 ADMIN_USERNAME = '%s'
 ADMIN_PASSWORD = '%s'
 ANALYTICS_ID = '%s'

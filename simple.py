@@ -3,6 +3,7 @@
 # python imports
 import re
 import datetime
+import os
 from functools import wraps
 from unicodedata import normalize
 
@@ -12,10 +13,20 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug.security import check_password_hash
 from flask import render_template, request, Flask, flash, redirect, url_for, \
                   abort, jsonify, Response, make_response
+from werkzeug.contrib.cache import FileSystemCache, NullCache
 
 app = Flask(__name__)
 app.config.from_object('settings')
 db = SQLAlchemy(app)
+cache_directory = os.path.dirname(__file__)
+try:
+    cache = FileSystemCache(os.path.join(cache_directory, "cache"))
+except Exception,e:
+    print "Could not create cache folder, caching will be disabled."
+    print "Error: %s"%e
+    cache = NullCache()
+
+
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
@@ -43,7 +54,16 @@ class Post(db.Model):
     updated_at = db.Column(db.DateTime)
 
     def render_content(self):
-        return MARKDOWN_PARSER.convert(self.text)
+        _cached = cache.get("post_%s"%self.id)
+        if _cached is not None:
+            return _cached
+        text = MARKDOWN_PARSER.convert(self.text)
+        cache.set("post_%s"%self.id, text)
+        return text
+
+    def set_content(self, content):
+        self.text = content
+
 
 try:
     db.create_all()
@@ -166,7 +186,7 @@ def edit(post_id):
         if post.title != request.form.get("post_title", ""):
             post.title = request.form.get("post_title","")
             post.slug = slugify(post.title)
-        post.text = request.form.get("post_content","")
+        post.set_content(request.form.get("post_content",""))
         post.updated_at = datetime.datetime.now()
 
         if any(request.form.getlist("post_draft", type=int)):
@@ -216,7 +236,7 @@ def save_post(post_id):
     if post.title != request.form.get("title", ""):
         post.title = request.form.get("title","")
         post.slug = slugify(post.title)
-    post.text = request.form.get("content", "")
+    post.set_content(request.form.get("content", ""))
     post.updated_at = datetime.datetime.now()
     db.session.add(post)
     db.session.commit()

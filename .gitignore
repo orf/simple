@@ -2,3 +2,4 @@
 *.db
 *.*~
 /settings.py
+cache/
