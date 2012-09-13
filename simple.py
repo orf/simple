@@ -283,4 +283,6 @@ def slugify(text, delim=u'-'):
         return slug
 
 if __name__ == "__main__":
-    app.run()
+    # Listen on all interfaces. This is so I could view the page on my iPhone/WP7 *not* so you can deploy using this file.
+
+    app.run(host="0.0.0.0")

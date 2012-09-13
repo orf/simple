@@ -4,26 +4,9 @@ body {
 }
 
 time {
-    display: block;
-    padding: 20px 0 20px 50px;
     text-transform: uppercase;
     font-weight: 900;
     font-size: 12px;
-}
-
-.post_container {
-    padding: 26px 0 15px 50px;
-}
-
-
-.sidebar {
-    position:fixed;
-    left:1%;
-    width:10%;
-}
-
-.content {
-    margin-left: 15%;
 }
 
 
@@ -48,10 +31,6 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 0.5em;
 }
 
-.post_header {
-    margin: 0em;
-}
-
 h1 {
     font-weight: 900;
     font-size: 30px;
@@ -70,10 +49,6 @@ a:active{
 a:hover {
     color: red;
     text-decoration: none;
-}
-
-header {
-    padding: 30px 0px;
 }
 
 ul {
@@ -166,15 +141,3 @@ header li a:hover {
     display: block;
     /* Hide the text; just using it for sizing */
     visibility: hidden; }
-
-.sidebar-nav-fixed {
-    padding: 9px 0;
-    position:fixed;
-    left:20px;
-    top:60px;
-    width:100px;
-}
-
-.span-fixed-sidebar {
-    margin-left: 120px;
-}

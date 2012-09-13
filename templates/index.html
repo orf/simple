@@ -5,20 +5,23 @@
 {% block content %}
 
     {% for post in posts %}
-        <section id="post-{{ post.id }}">
-            <div class="post_container">
-                <div class="post_header">
-                    <h1><a href="{{ url_for('view_post_slug', slug=post.slug, pid=current_page) }}">{{ post.title }}</a></h1>
-                </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <section id="post-{{ post.id }}">
+                    <div class="post_header">
+                        <h1><a href="{{ url_for('view_post_slug', slug=post.slug, pid=current_page) }}">{{ post.title }}</a></h1>
+                    </div>
 
-                {% if config.get('POST_CONTENT_ON_HOMEPAGE',True) %}
-                    <br/>
-                    {{ post.render_content()|safe }}
-                {% else %}
-                    <p style="color: #999;">{{ post.created_at.strftime('%B %d, %Y') }}</p>
-                {% endif %}
+                    {% if config.get('POST_CONTENT_ON_HOMEPAGE',True) %}
+                        <br/>
+                        {{ post.render_content()|safe }}
+                    {% else %}
+                        <p style="color: #999;">Posted: {{ post.created_at.strftime('%B %d, %Y') }}, viewed {{ post.views }} times</p>
+                    {% endif %}
+                </section>
             </div>
-        </section>
+        </div>
+
     {% endfor %}
 
     <ul class="pager">

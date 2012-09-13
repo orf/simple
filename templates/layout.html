@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+        <link href="{{ url_for('static', filename='css/bootstrap-responsive.min.css') }}" rel="stylesheet" media="screen">
         <link href="{{ url_for('static', filename='css/layout.css') }}" rel="stylesheet" media="screen">
         <link href='http://fonts.googleapis.com/css?family={{ config.FONT_NAME|replace(' ','+') }}:400,900' rel='stylesheet' type='text/css'>
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.7.2.min.js') }}"></script>
@@ -9,13 +11,21 @@
         <link href="/style.css" rel="stylesheet" type="text/css">
         <link href="{{ url_for('static', filename='css/prettify.css') }}" rel="stylesheet" type="text/css">
         <script src="{{ url_for('static', filename='js/prettify.js') }}" type="text/javascript"></script>
-        {% block title %}{% endblock %}        
+        {% block title %}{% endblock %}
         {% block head %}{% endblock %}
+
+        <style>
+            body {
+                padding-top: 20px;
+            }
+        </style>
+
     </head>
     <body onload="prettyPrint()">
         <div class="container-fluid">
-            <div class="sidebar">
-                <div class="span2">
+
+            <div class="span2">
+                <div class="hidden-phone">
                     <header>
                         <h1><a href="{{ url_for('index') }}">{{ config.BLOG_TITLE }}</a></h1>
                         <br />
@@ -53,26 +63,45 @@
                     </header>
                 </div>
             </div>
-            <div class="content">
+
+            <div class="hidden-phone">
+                <div class="span1">
+                    <!--Divider!!-->
+                </div>
+            </div>
+
+            <div class="span8">
                 <div class="row-fluid">
-                    <div class="span9">
-                        <div class="row">
-                            <div class="span9"><time>
-                                {% if post %}
-                                    Posted {{ post.created_at.strftime('%B %d, %Y') }}
-                                    {% if post.created_at.strftime('%B %d, %Y') != post.updated_at.strftime('%B %d, %Y') %}
-                                        , Updated {{ post.updated_at.strftime('%B %d, %Y') }}
-                                    {% endif %}
-                                {% else %}
-                                    {{ now.strftime('%B %d, %Y') }}
+                    <div class="span12">
+                        <time>
+                            {% if post %}
+                                Posted {{ post.created_at.strftime('%B %d, %Y') }}
+                                {% if post.created_at.strftime('%B %d, %Y') != post.updated_at.strftime('%B %d, %Y') %}
+                                    , Updated {{ post.updated_at.strftime('%B %d, %Y') }}
                                 {% endif %}
-                            </time></div>
-                        </div>
-                        <div class="row">
-                            <div class="span9">
-                                {% block content %}{% endblock %}
-                            </div>
-                        </div>
+                            {% else %}
+                                <div class="visible-phone">
+                                    <h3><a href="{{ url_for('index') }}">{{ config.BLOG_TITLE }}</a></h3>
+                                    <span>{{ config.BLOG_TAGLINE }}</span>
+                                </div>
+                                <div class="hidden-phone">
+                                    {{ now.strftime('%B %d, %Y') }}
+                                </div>
+                            {% endif %}
+                        </time>
+                    </div>
+                </div>
+
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="visible-phone"><br/></div>
+                        <div class="hidden-phone"><hr/></div>
+                    </div>
+                </div>
+
+                <div class="row-fluid">
+                    <div class="span12">
+                        {% block content %}{% endblock %}
                     </div>
                 </div>
             </div>
