@@ -17,13 +17,18 @@
             body {
                 padding-top: 20px;
             }
+
+            .sidebar-nav-fixed {
+                position:fixed;
+            }
         </style>
+
 
     </head>
     <body onload="prettyPrint()">
         <div class="container-fluid">
 
-            <div class="span2">
+            <div class="span2 sidebar-nav-fixed">
                 <div class="hidden-phone">
                     <header>
                         <h1><a href="{{ url_for('index') }}">{{ config.BLOG_TITLE }}</a></h1>
@@ -61,6 +66,13 @@
                         </span>
                     </header>
                 </div>
+            </div>
+
+
+            <div class="hidden-phone">
+                <div class="span2"></div>
+                <!--Hack! The position: fixed on the sidebar div screws with stuff.
+                    I sit here to maintain order and positioning.-->
             </div>
 
             <div class="hidden-phone">
