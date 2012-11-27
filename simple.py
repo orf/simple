@@ -3,7 +3,7 @@
 # python imports
 import re
 import datetime
-import os,urllib
+import os
 from functools import wraps
 from unicodedata import normalize
 
