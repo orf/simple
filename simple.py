@@ -279,10 +279,16 @@ def slugify(text, delim='-'):
     # This could have issues if a post is marked as draft, then live, then 
     # draft, then live and there are > 1 posts with the same slug. Oh well.
     count = db.session.query(Post).filter_by(slug=slug).count()
-    if count > 0:
-        return "%s%s%s" % (slug, delim, count)
+    if (count>0):
+        onemore = 1
+        while(onemore>0):
+            slugtmp = "%s%s%s" % (slug, delim, count)
+            onemore = db.session.query(Post).filter_by(slug=slugtmp).count() 
+            count = count + onemore
+        return slugtmp
     else:
         return slug
+
 
 if __name__ == "__main__":
     # Listen on all interfaces. This is so I could view the page on my iPhone/WP7 *not* so you can deploy using this file.
