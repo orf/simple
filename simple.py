@@ -46,7 +46,7 @@ class Post(db.Model):
     __tablename__ = "posts"
     id    = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String())
-    slug  = db.Column(db.String(), unique=True)
+    slug  = db.Column(db.LargeBinary(), unique=True)
     text  = db.Column(db.String(), default="")
     draft = db.Column(db.Boolean(), index=True, default=True)
     views = db.Column(db.Integer(), default=0)
@@ -143,6 +143,8 @@ def view_post(post_id):
 
 @app.route("/<slug>")
 def view_post_slug(slug):
+    slug = slug.encode('utf-8')
+
     try:
         post = db.session.query(Post).filter_by(slug=slug, draft=False).one()
     except Exception:
@@ -266,14 +268,14 @@ def feed():
     response.mimetype = "application/xml"
     return response
 
-def slugify(text, delim=u'-'):
+def slugify(text, delim='-'):
     """Generates an slightly worse ASCII-only slug."""
     result = []
     for word in _punct_re.split(text.lower()):
-        word = normalize('NFKD', unicode(word)).encode('ascii', 'ignore')
+        word = normalize('NFKD', unicode(word)).encode('utf-8')
         if word:
             result.append(word)
-    slug = unicode(delim.join(result))
+    slug = delim.join(result)
     # This could have issues if a post is marked as draft, then live, then 
     # draft, then live and there are > 1 posts with the same slug. Oh well.
     count = db.session.query(Post).filter_by(slug=slug).count()
