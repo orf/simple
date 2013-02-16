@@ -34,11 +34,11 @@ except Exception,e:
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
-extentions = ['fenced_code', 'toc']
+extensions = ['fenced_code', 'toc']
 if pygments is not None:
-    extentions.append('codehilite')
+    extensions.append('codehilite')
 
-MARKDOWN_PARSER = markdown.Markdown(extensions=['fenced_code','codehilite', 'toc'],
+MARKDOWN_PARSER = markdown.Markdown(extensions=extensions,
                                     output_format="html5")
 
 class Post(db.Model):
