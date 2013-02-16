@@ -203,6 +203,8 @@ def edit(post_id):
             post.draft = True
         else:
             post.draft = False
+            post.created_at = datetime.datetime.now()
+            post.updated_at = datetime.datetime.now()
 
         db.session.add(post)
         db.session.commit()
