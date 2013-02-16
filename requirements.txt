@@ -2,5 +2,6 @@ Flask==0.9
 Flask-SQLAlchemy==0.16
 Jinja2==2.6
 Markdown==2.2.1
-SQLAlchemy==0.7.9
+SQLAlchemy==0.7.10
 Werkzeug==0.8.3
+Pygments==1.6

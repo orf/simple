@@ -6,10 +6,20 @@ About
 ============
 The point of Simple is to be simple. The blog is 1 file (excluding resources) with a few simple pure-python dependancies (Flask, Sqlalchemy, Markdown), it doesn't require a database server, has a small footprint and is fairly fast.
 
+Features
+============
+* Markdown goodness, no clutter or fuss when writing your posts
+* Lightweight and simple
+* Supports Disqus comments, Google Analytics and custom fonts (from google's font library)
+* Includes several Markdown extensions:
+    * [CodeHilight](http://pythonhosted.org/Markdown/extensions/code_hilite.html)
+    * [Fenced Code Blocks](http://pythonhosted.org/Markdown/extensions/fenced_code_blocks.html)
+    * [Table of contents](http://pythonhosted.org/Markdown/extensions/toc.html)
+
 Installation
 ============
 Its quite simple. Go download Python 2.7+, Flask, Sqlalchemy and flask-sqlalchemy and you are good to go.
-To create a settings file run create_config.py and enter some details, then run simple.py.
+To create a settings file run create_config.py and enter configuration values when prompted, then run simple.py.
 
 Deployment
 ============
@@ -24,6 +34,8 @@ You can see my blog running this software [here](http://tomforb.es/simple).
 
 Screenshots
 ===========
-![Admin](http://i.imgur.com/vWfOs.png)
-![Draft](http://i.imgur.com/T9BX4.png)
-![Live](http://i.imgur.com/WWDK4.png)
+![Admin](http://i.imgur.com/M4i0ahm.png)
+
+![Draft](http://i.imgur.com/rbpdPdn.png)
+
+![Live](http://i.imgur.com/tsiSsED.png)

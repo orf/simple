@@ -15,6 +15,12 @@ from flask import render_template, request, Flask, flash, redirect, url_for, \
                   abort, jsonify, Response, make_response
 from werkzeug.contrib.cache import FileSystemCache, NullCache
 
+try:
+    import pygments
+    from pygments.formatters import HtmlFormatter
+except ImportError:
+    pygments = None
+
 app = Flask(__name__)
 app.config.from_object('settings')
 db = SQLAlchemy(app)
@@ -26,13 +32,14 @@ except Exception,e:
     print "Error: %s"%e
     cache = NullCache()
 
-
-
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
-MARKDOWN_PARSER = markdown.Markdown(extensions=['fenced_code'], 
-                                    output_format="html5", 
-                                    safe_mode=True)
+extentions = ['fenced_code', 'toc']
+if pygments is not None:
+    extentions.append('codehilite')
+
+MARKDOWN_PARSER = markdown.Markdown(extensions=['fenced_code','codehilite', 'toc'],
+                                    output_format="html5")
 
 class Post(db.Model):
     def __init__(self, title=None, created_at=None):
@@ -286,5 +293,13 @@ def slugify(text, delim='-'):
 
 if __name__ == "__main__":
     # Listen on all interfaces. This is so I could view the page on my iPhone/WP7 *not* so you can deploy using this file.
-
+    if pygments is not None:
+        to_write_path = os.path.join(app.static_folder, "css", "code_styles.css")
+        if not os.path.exists(to_write_path):
+            to_write = HtmlFormatter().get_style_defs(".codehilite")
+            try:
+                with open(to_write_path, "w") as fd:
+                    fd.write(to_write)
+            except IOError:
+                pass
     app.run(host="0.0.0.0")
