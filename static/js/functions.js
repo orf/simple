@@ -1,4 +1,4 @@
-$.fn.autogrow = function(options) {
+$.fn.autogrow = function() {
 
     this.filter('textarea').each(function() {
 
@@ -37,24 +37,51 @@ $.fn.autogrow = function(options) {
     return this;
 };
 
+var previewWindowObject;
+
 function issueSaveAjax(id, redirect){
     var ptitle   = $("#post_title").val();
     var pcontent = $("#post_content").val();
-    var req = $.ajax({
+
+    if (!redirect && !isActive){
+        // If its not a redirect (meaning the button was clicked) and the window is
+        // not active then do nothing.
+        return
+    }
+
+    var ajax_req = $.ajax({
         type: "POST",
         url:"/admin/save/"+id,
         data: {title: ptitle,
                content: pcontent}
     });
-    req.done(function(message)
-    {
-        if (redirect)
-        {
-            var win = window.open("/preview/"+id, '_blank');
-        }
-    })
+
+
+    if (previewWindowObject == null){
+        if (redirect) previewWindowObject = window.open("/preview/"+id, "previewWindow");
+    } else {
+        ajax_req.done(function(data){
+            if (data.update == true){
+                var old_scroll_top = $(previewWindowObject).scrollTop();
+                previewWindowObject.refreshPreviewPage();
+                $(previewWindowObject).scrollTop(old_scroll_top);
+                if (redirect){ previewWindowObject.focus(); }
+            }
+        });
+    }
 }
 
-$(document).ready(
-        $("#post_content").autogrow()
+var isActive;
+
+$(window).focus(function(){
+    isActive = true;
+    $("#AutoSaveDetail").css('color','').text('AutoSave: On');
+}).blur(function(){
+        isActive = false;
+        $("#AutoSaveDetail").css('color','red').text('AutoSave: Off');
+    });
+
+$(document).ready(function() {
+        $("#post_content").autogrow();
+    }
 );

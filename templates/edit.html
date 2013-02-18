@@ -4,7 +4,6 @@
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
     <link href="{{ url_for('static', filename='css/layout.css') }}" type="text/css" media="screen" rel="stylesheet">
     <link href="/style.css" type="text/css" media="screen" rel="stylesheet">
-    <script src="https://raw.github.com/coreyti/showdown/master/compressed/showdown.js" type="text/javascript"></script>
 
     <style>
         .sidebar-nav-fixed {
@@ -19,13 +18,15 @@
         <script type="text/javascript">
             function SaveTick(){
                 issueSaveAjax({{ post.id }}, false);
-                setTimeout("SaveTick()", 10000)
+                // Save first after 10 seconds, then 4 from then onwards.
+                setTimeout("SaveTick()", 4000);
             }
             $(document).ready(function(){
                 setTimeout("SaveTick();", 10000);
             })
         </script>
     {% endif %}
+
 {% endblock %}
 
 
@@ -42,13 +43,16 @@
                     </p>
                     <p>
                         {% if post.draft %}
-                            <a class="btn btn-inverse" href="#" onclick="issueSaveAjax({{ post.id }}, true); return false;" target="_blank">Preview</a>
+                            <a class="btn btn-inverse" href="#" onclick="issueSaveAjax({{ post.id }}, true)">Preview</a>
                         {% else %}
                             <a class="btn btn-inverse" href="{{  url_for('view_post_slug', slug=post.slug) }}" target="_blank">View live</a>
                         {% endif %}
                     </p>
                     <p>
                         <button class="btn btn-inverse" onclick="$('#edit_post').submit()">Save</button>
+                    </p>
+                    <p id="AutoSaveDetail">
+                        AutoSave: On
                     </p>
                 </div>
 
