@@ -14,6 +14,9 @@ from werkzeug.security import check_password_hash
 from flask import render_template, request, Flask, flash, redirect, url_for, \
     abort, jsonify, Response, make_response
 from werkzeug.contrib.cache import FileSystemCache, NullCache
+from werkzeug.utils import secure_filename
+import json
+from base64 import b32encode
 
 try:
     import pygments
@@ -23,6 +26,8 @@ except ImportError:
 
 app = Flask(__name__)
 app.config.from_object('settings')
+app.secret_key =  app.config["SECRET_KEY"] 
+
 db = SQLAlchemy(app)
 cache_directory = os.path.dirname(__file__)
 try:
@@ -277,6 +282,46 @@ def preview(post_id):
         return abort(404)
 
     return render_template("view.html", post=post, preview=True)
+
+
+
+
+
+UPLOAD_FOLDER = 'uploads/'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+from os import urandom
+@app.route("/upload", methods=["POST"])
+@requires_authentication
+def upload_file():
+    if request.method == 'POST':
+        file_upload = request.files['file']
+        if file and allowed_file(file_upload.filename):
+            filename = secure_filename(file_upload.filename)
+            key = b32encode(urandom(5))
+            filename, extenstion = os.path.splitext(filename)
+            filename = filename+'_'+key+extenstion
+            file_upload.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            url = url_for('uploaded_file', filename=filename)
+            resp = {}
+            resp['status'] = 'ok'
+            resp['url'] = url
+            return json.dumps(resp)
+    return 'ok'
+            
+            
+from flask import send_from_directory
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+
+
 
 
 @app.route("/posts.rss")

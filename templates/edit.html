@@ -9,11 +9,38 @@
         .sidebar-nav-fixed {
             position:fixed;
         }
+
+        div#drop-upload{
+            font-size: 13px;
+        }
+        div#drop-upload input{
+            font-size: 13px;
+        }
     </style>
 
 {% endblock %}
 
 {% block head %}
+
+        <script>
+            window.ondragover = function(e) {e.preventDefault()}
+            window.ondrop = function(e) {e.preventDefault(); upload(e.dataTransfer.files[0]); }
+            function upload(file) {
+                if (!file || !file.type.match(/image.*/)) return;
+
+                var fd = new FormData(); 
+                fd.append("file", file); 
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/upload");
+                xhr.onload = function() {
+                    console.log(xhr.responseText);
+                    document.querySelector("#upload-url").value = JSON.parse(xhr.responseText).url;
+                }
+                xhr.send(fd);
+            }
+        </script>
+
+
     {% if post.draft %}
         <script type="text/javascript">
             function SaveTick(){
@@ -54,6 +81,15 @@
                     <p id="AutoSaveDetail">
                         AutoSave: On
                     </p>
+
+                    <div id="drop-upload"> 
+                        drop image here<br>
+                        <input style="visibility: collapse; width: 0px;" type="file" onchange="upload(this.files[0])">
+                        <input id="upload-url" type="text" readonly="" spellcheck="false" name="upload-url" value="">
+                        <br>
+
+                    </div>
+
                 </div>
 
                 <div class="span1">

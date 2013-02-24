@@ -8,6 +8,9 @@ def input_with_default(prompt, default):
         return default
     return response
 
+from os import urandom
+from base64 import b32encode
+
 print "Generating a Simple config file. Please answer some questions:"
 SETTINGS = (
     input_with_default("Posts per page", 5),
@@ -23,7 +26,9 @@ SETTINGS = (
     input_with_default("Blog tagline", ""),
     input_with_default("Blog URL (e.g. /blog)","/"),
     input_with_default("Font Name (Selected from google font library): ","Source Sans Pro").replace(" ","+"),
-    input_with_default("Disqus Shortname", "")
+    input_with_default("Secret key", b32encode(urandom(32))),
+    input_with_default("Disqus Shortname", "",
+    )
 )
 
 with open("settings.py", "w") as fd:
@@ -41,6 +46,7 @@ BLOG_TITLE = "%s"
 BLOG_TAGLINE = "%s"
 BLOG_URL = '%s'
 FONT_NAME = '%s',
+SECRET_KEY = '%s',
 DISQUS_SHORTNAME = '%s'\n""" % SETTINGS)
     fd.flush()
 
