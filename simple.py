@@ -156,8 +156,6 @@ def view_post(post_id):
 
 @app.route("/<slug>")
 def view_post_slug(slug):
-    slug = slug.encode('utf-8')
-
     try:
         post = db.session.query(Post).filter_by(slug=slug, draft=False).one()
     except Exception:
@@ -291,11 +289,11 @@ def feed():
     return response
 
 
-def slugify(text, delim='-'):
+def slugify(text, delim=u'-'):
     """Generates an slightly worse ASCII-only slug."""
     result = []
     for word in _punct_re.split(text.lower()):
-        word = normalize('NFKD', unicode(word)).encode('utf-8')
+        word = normalize('NFKD', unicode(word))
         if word:
             result.append(word)
     slug = delim.join(result)
