@@ -11,6 +11,7 @@ Features
 * Markdown goodness, no clutter or fuss when writing your posts
 * Lightweight and simple
 * Supports Disqus comments, Google Analytics and custom fonts (from google's font library)
+* Drag and drop uploads
 * Includes several Markdown extensions:
     * [CodeHilight](http://pythonhosted.org/Markdown/extensions/code_hilite.html)
     * [Fenced Code Blocks](http://pythonhosted.org/Markdown/extensions/fenced_code_blocks.html)
