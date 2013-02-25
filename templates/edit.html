@@ -21,23 +21,34 @@
 {% endblock %}
 
 {% block head %}
-
         <script>
-            window.ondragover = function(e) {e.preventDefault()}
-            window.ondrop = function(e) {e.preventDefault(); upload(e.dataTransfer.files[0]); }
-            function upload(file) {
-                if (!file || !file.type.match(/image.*/)) return;
+            window.ondragover = function(e) {e.preventDefault()};
+            window.ondrop = function(e) {e.preventDefault(); upload(e.dataTransfer.files); };
 
-                var fd = new FormData(); 
-                fd.append("file", file); 
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "/upload");
-                xhr.onload = function() {
-                    console.log(xhr.responseText);
-                    document.querySelector("#upload-url").value = JSON.parse(xhr.responseText).url;
-                }
-                xhr.send(fd);
+            function upload(files) {
+                $("#upload_list").empty();
+                $(files).each(function(i,file){
+                    if (!file || !file.type.match(/image.*/)) return;
+
+                    var fd = new FormData();
+                    fd.append("file", file);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/upload");
+                    xhr.onload = function() {
+                        console.log(xhr.responseText);
+                        var resp = JSON.parse(xhr.responseText);
+                        $("#upload_list").append("<p><a class='uploadUrl' target='_blank' href='" + resp.url + "'>" + resp.name + "</a></p>")
+                    };
+                    xhr.send(fd);
+                })
             }
+
+            $(document).ready(function(){
+                $("#upload_list").on('click', '.uploadUrl', function(ev){
+                    $("#post_content").val($("#post_content").val() + '\n![](' + $(this).attr('href') + ')');
+                    ev.preventDefault();
+                })
+            })
         </script>
 
 
@@ -48,6 +59,7 @@
                 // Save first after 10 seconds, then 4 from then onwards.
                 setTimeout("SaveTick()", 4000);
             }
+
             $(document).ready(function(){
                 setTimeout("SaveTick();", 10000);
             })
@@ -82,12 +94,11 @@
                         AutoSave: On
                     </p>
 
-                    <div id="drop-upload"> 
-                        drop image here<br>
+                    <div id="drop-upload" class="span12 well well-small" style="word-wrap: break-word;">
+                        Drag files here to upload. Click to insert.
                         <input style="visibility: collapse; width: 0px;" type="file" onchange="upload(this.files[0])">
-                        <input id="upload-url" type="text" readonly="" spellcheck="false" name="upload-url" value="">
-                        <br>
-
+                        <div id="upload_list">
+                        </div>
                     </div>
 
                 </div>

@@ -39,9 +39,9 @@ db = SQLAlchemy(app)
 cache_directory = os.path.dirname(__file__)
 try:
     cache = FileSystemCache(os.path.join(cache_directory, "cache"))
-except Exception,e:
+except Exception, e:
     print "Could not create cache folder, caching will be disabled."
-    print "Error: %s"%e
+    print "Error: %s" % e
     cache = NullCache()
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
@@ -302,14 +302,11 @@ def upload_file():
         if file and allowed_file(file_upload.filename):
             filename = secure_filename(file_upload.filename)
             key = b32encode(urandom(5))
-            filename, extenstion = os.path.splitext(filename)
-            filename = filename+'_'+key+extenstion
+            filename, extension = os.path.splitext(filename)
+            filename = filename + '_' + key + extension
             file_upload.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             url = url_for('uploaded_file', filename=filename)
-            response = {}
-            response['status'] = 'ok'
-            response['url'] = url
-            return json.dumps(response)
+            return json.dumps({'status': 'ok', 'url': url, 'name': filename})
     return 'ok'
             
 
@@ -317,7 +314,6 @@ def upload_file():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
-
 
 @app.route("/posts.rss")
 def feed():
