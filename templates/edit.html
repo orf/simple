@@ -43,7 +43,7 @@
                     </p>
                     <p>
                         {% if post.draft %}
-                            <a class="btn btn-inverse" href="#" onclick="issueSaveAjax({{ post.id }}, true)">Preview</a>
+                            <a class="btn btn-inverse" href="{{ url_for('preview', post_id=post.id) }}" target="previewPage" onclick="issueSaveAjax({{ post.id }})">Preview</a>
                         {% else %}
                             <a class="btn btn-inverse" href="{{  url_for('view_post_slug', slug=post.slug) }}" target="_blank">View live</a>
                         {% endif %}
