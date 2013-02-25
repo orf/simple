@@ -1,5 +1,7 @@
 """ utility for generating a configuration file for a simple blog """
 from werkzeug.security import generate_password_hash
+from os import urandom
+from base64 import b32encode
 
 def input_with_default(prompt, default):
     """ Small wrapper around raw_input for prompting and defaulting """
@@ -22,8 +24,10 @@ SETTINGS = (
     input_with_default("Blog title", ""),
     input_with_default("Blog tagline", ""),
     input_with_default("Blog URL (e.g. /blog)","/"),
-    input_with_default("Font Name (Selected from google font library): ", "Source Sans Pro").replace(" ", "+"),
-    input_with_default("Disqus Shortname", "")
+    input_with_default("Font Name (Selected from google font library): ","Source Sans Pro").replace(" ","+"),
+    input_with_default("Secret key", b32encode(urandom(32))),
+    input_with_default("Disqus Shortname", "",
+    )
 )
 
 with open("settings.py", "w") as fd:
@@ -40,7 +44,8 @@ CONTACT_EMAIL = '%s'
 BLOG_TITLE = "%s"
 BLOG_TAGLINE = "%s"
 BLOG_URL = '%s'
-FONT_NAME = '%s'
+FONT_NAME = '%s',
+SECRET_KEY = '%s',
 DISQUS_SHORTNAME = '%s'\n""" % SETTINGS)
     fd.flush()
 
