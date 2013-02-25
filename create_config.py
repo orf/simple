@@ -1,5 +1,7 @@
 """ utility for generating a configuration file for a simple blog """
 from werkzeug.security import generate_password_hash
+from os import urandom
+from base64 import b32encode
 
 def input_with_default(prompt, default):
     """ Small wrapper around raw_input for prompting and defaulting """
@@ -7,9 +9,6 @@ def input_with_default(prompt, default):
     if not response:
         return default
     return response
-
-from os import urandom
-from base64 import b32encode
 
 print "Generating a Simple config file. Please answer some questions:"
 SETTINGS = (

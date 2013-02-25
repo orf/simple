@@ -6,6 +6,8 @@ import datetime
 import os
 from functools import wraps
 from unicodedata import normalize
+from os import urandom
+from base64 import b32encode
 
 # web stuff and markdown imports
 import markdown
@@ -16,7 +18,7 @@ from flask import render_template, request, Flask, flash, redirect, url_for, \
 from werkzeug.contrib.cache import FileSystemCache, NullCache
 from werkzeug.utils import secure_filename
 import json
-from base64 import b32encode
+from flask import send_from_directory
 
 try:
     import pygments
@@ -27,6 +29,11 @@ except ImportError:
 app = Flask(__name__)
 app.config.from_object('settings')
 app.secret_key =  app.config["SECRET_KEY"] 
+
+UPLOAD_FOLDER = 'uploads/'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 db = SQLAlchemy(app)
 cache_directory = os.path.dirname(__file__)
@@ -284,18 +291,11 @@ def preview(post_id):
     return render_template("view.html", post=post, preview=True)
 
 
-
-
-
-UPLOAD_FOLDER = 'uploads/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-from os import urandom
+
 @app.route("/upload", methods=["POST"])
 @requires_authentication
 def upload_file():
@@ -308,20 +308,17 @@ def upload_file():
             filename = filename+'_'+key+extenstion
             file_upload.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             url = url_for('uploaded_file', filename=filename)
-            resp = {}
-            resp['status'] = 'ok'
-            resp['url'] = url
-            return json.dumps(resp)
+            response = {}
+            response['status'] = 'ok'
+            response['url'] = url
+            return json.dumps(response)
     return 'ok'
             
-            
-from flask import send_from_directory
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
-
-
 
 
 @app.route("/posts.rss")
