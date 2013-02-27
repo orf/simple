@@ -12,10 +12,46 @@
 
         div#drop-upload{
             font-size: 13px;
+            margin-left: 0px;
+            color: #1e2221;
+            width: 100%;
+            padding: 1px;
         }
         div#drop-upload input{
             font-size: 13px;
         }
+
+        #navbar{
+            position: fixed;
+            bottom: 0; left: 20px;
+            width: 100%;
+            background: #fff;
+        }
+
+        #publish-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            background: #222;
+            width: 100%;
+            text-align: center;
+            padding-top: 15px;
+            padding-right: 0px;
+            padding-bottom: 15px;
+            padding-left: 0px;
+            padding-bottom: 0px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        #auto-save{
+            color: #fff;
+        }
+        textarea {
+            font-family: monospace;
+            font-size: 14px;
+        }
+
     </style>
 
 {% endblock %}
@@ -83,7 +119,6 @@
         <script type="text/javascript">
             function SaveTick(){
                 issueSaveAjax({{ post.id }}, false);
-                // Save first after 10 seconds, then 4 from then onwards.
                 setTimeout("SaveTick()", 4000);
             }
 
@@ -98,68 +133,73 @@
 
 {% block content %}
     <div class="container-fluid">
-        <div class="row-fluid">
+        <div class="row">
             <form accept-charset="UTF-8" action="" class="edit_post" id="edit_post" method="post">
-                <div class="span2 sidebar-nav-fixed" style="padding: 60px 0;">
-                    <p><a class="btn btn-inverse" href="{{ url_for("admin") }}">Admin</a></p>
-                    <p><a class="btn btn-inverse" href="{{ url_for('delete', post_id=post.id, next="admin") }}">Delete</a> </p>
-                    <p>
-                        <label for="post_draft">Draft</label>
+
+                <div class="post_container">
+                    <div class="span10" style="padding-top: 60px ;">
+                            <div class="row">
+                                <div class="span7 offset1">
+                                    <div class="expandingArea text-title">
+                                        <pre><span></span><br></pre>
+                                        <div class="post_header">
+                                            <textarea class="post_title" id="post_title" name="post_title" placeholder="Title here" rows="1">{{ post.title }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="span7 offset1">
+                                    <div class="expandingArea text-content" id="edit_post_area">
+                                        <pre><span></span><br></pre>
+                                        <textarea cols="40" id="post_content" name="post_content" placeholder="Write post here" rows="20">{{ post.text }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                     </div>
+                 </div>
+
+                <div id="publish-bar" class="center">
+                    <div class="span1"></div>
+                    <div class="span1">
+                        <a class="btn btn-inverse" href="{{ url_for("admin") }}">Admin</a>
+                    </div>
+                    <div class="span1">
+                        <a class="btn btn-inverse" href="{{ url_for('delete', post_id=post.id, next="admin") }}">Delete</a>
+                    </div>
+                    <div class="span1">
+                        <label id="auto-save" for="post_draft">Draft</label>
                         <input name="post_draft" type="hidden" value="0" /><input id="post_draft" name="post_draft" type="checkbox" value="1" {% if post.draft %}checked{% endif %} />
-                    </p>
-                    <p>
+                    </div>
+
+                    <div class="span1">
                         {% if post.draft %}
                             <a class="btn btn-inverse" href="{{ url_for('preview', post_id=post.id) }}" target="previewPage" onclick="issueSaveAjax({{ post.id }})">Preview</a>
                         {% else %}
                             <a class="btn btn-inverse" href="{{  url_for('view_post_slug', slug=post.slug) }}" target="_blank">View live</a>
                         {% endif %}
-                    </p>
-                    <p>
+                    </div>
+                    
+                    <div class="span1">
                         <button class="btn btn-inverse" onclick="$('#edit_post').submit()">Save</button>
-                    </p>
-                    <p id="AutoSaveDetail">
-                        AutoSave: On
-                    </p>
+                    </div>
 
-                    <div id="drop-upload" class="span12 well well-small" style="word-wrap: break-word;">
-                        Drag files here to upload. Click to insert.
-                        <input style="visibility: collapse; width: 0px;" type="file" onchange="upload(this.files[0])">
-                        <div id="upload_list">
+                    <div class="span3">
+                        <div id="drop-upload" class=" well well-small" style="word-wrap: break-word;">
+                            Drag files here to upload. Click to insert.
+                            <input style="visibility: collapse; width: 0px;" type="file" onchange="upload(this.files[0])">
+                            <div id="upload_list"></div>
                         </div>
                     </div>
 
                 </div>
-
-                <div class="span1">
-
-                </div>
-
-                <div class="span9" style="padding: 60px 0;">
-                        <div class="row">
-                            <div class="span7 offset3">
-                                <div class="expandingArea text-title">
-                                    <pre><span></span><br></pre>
-                                    <textarea class="post_title" id="post_title" name="post_title" placeholder="Title here" rows="1">{{ post.title }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="span7 offset3">
-                                <div class="expandingArea text-content" id="edit_post_area">
-                                    <pre><span></span><br></pre>
-                                    <textarea cols="40" id="post_content" name="post_content" placeholder="Write post here" rows="20">{{ post.text }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-                 </div>
             </form>
         </div>
     </div>
 {% endblock %}
 
 {% block content2 %}
-
 
             <div id="publish-bar">
                 <div class="contain">

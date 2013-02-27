@@ -55,10 +55,10 @@ var isActive;
 
 $(window).focus(function(){
     isActive = true;
-    $("#AutoSaveDetail").css('color','').text('AutoSave: On');
+    $("#auto-save").css('color','').text('Draft');
 }).blur(function(){
         isActive = false;
-        $("#AutoSaveDetail").css('color','red').text('AutoSave: Off');
+        $("#auto-save").css('color','red').text('Draft *');
     });
 
 $(document).ready(function() {

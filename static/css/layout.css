@@ -106,6 +106,7 @@ header li a:hover {
     padding: 0;
     outline: 0;
     border: 0;
+    width: 100%;
 }
 #admin .expandingArea {
     position: relative; }
