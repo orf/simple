@@ -315,6 +315,7 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
+
 @app.route("/posts.rss")
 def feed():
     posts = db.session.query(Post)\
