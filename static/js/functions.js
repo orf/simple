@@ -35,8 +35,9 @@ $.fn.autogrow = function() {
                 if (scrollOnce == false){
                     scrollOnce = true;
                 } else {
-                    console.log("Scrolling...");
-                    $('html, body').animate({scrollTop: $(document).height()}, 'fast')
+                    if (($(window).scrollTop() + $(window).height()) - $(document).height() > -20){
+                        $('html, body').animate({scrollTop: $(document).height()}, 'fast')
+                    }
                 }
             }
         }
