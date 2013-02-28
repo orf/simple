@@ -42,6 +42,6 @@ Screenshots
 ===========
 ![Admin](http://i.imgur.com/M4i0ahm.png)
 
-![Draft](http://i.imgur.com/rbpdPdn.png)
+![Draft](http://i.imgur.com/KkGtlTx.png)
 
 ![Live](http://i.imgur.com/tsiSsED.png)
