@@ -20,7 +20,7 @@ Features
 Installation
 ============
 Its quite simple. Go download Python 2.7+, Flask, Sqlalchemy and flask-sqlalchemy and you are good to go.
-To create a settings file run create_config.py and enter configuration values when prompted, then run simple.py.
+Clone this repository and create a settings file by running create_config.py, then run simple.py.
 
 ### Updating
 Updates to simple may add, remove or alter settings. Simple ships with a script called create_config.py which can update settings files with changes.
