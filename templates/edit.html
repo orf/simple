@@ -46,6 +46,7 @@
             $(document).ready(function(){
                 $("#upload_list").on('click', '.uploadUrl', function(ev){
                     $('#post_content').insertAtCaret('![](' + $(this).attr('href') + ')');
+                    $("#post_content").trigger('change');
                     ev.preventDefault();
                 })
             })
