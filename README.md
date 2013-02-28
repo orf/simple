@@ -19,7 +19,8 @@ Features
 
 Updating
 ============
-Updates to simple may add, remove or alter settings. Simple ships with a script called create_config.py which can update settings files with changes. To do this run "create_config.py update" and you will only be prompted for settings that are not present in an existing settings.py file.
+Updates to simple may add, remove or alter settings. Simple ships with a script called create_config.py which can update settings files with changes.
+To do this run "create_config.py" again and you will only be prompted for settings that are not present in the existing settings.py file.
 
 Installation
 ============
