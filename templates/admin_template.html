@@ -7,6 +7,9 @@
 
     <link href='http://fonts.googleapis.com/css?family=Lato:300,900' rel='stylesheet' type='text/css' />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" media="screen">
     {% block head %}{% endblock %}
 </head>
 
