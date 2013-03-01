@@ -5,6 +5,22 @@
 <link href="{{ url_for('static', filename='css/posts.css') }}" type="text/css" media="screen" rel="stylesheet">
 {% endblock %}
 
+{% block head %}
+<style>
+    a, a:visited, a:active {
+        color: #000;
+        text-decoration: none;
+    }
+    a:hover, a:focus {
+        color: red; 
+        text-decoration: none;
+    }
+    a.button{
+        color:#fff;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div id="drafts" class="col">
     <h1>Drafts <a href="{{ url_for('new_post') }}" class="button">New draft</a></h1>
