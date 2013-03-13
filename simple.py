@@ -221,9 +221,10 @@ def edit(post_id):
         if any(request.form.getlist("post_draft", type=int)):
             post.draft = True
         else:
-            post.draft = False
-            post.created_at = datetime.datetime.now()
-            post.updated_at = datetime.datetime.now()
+            if post.draft:
+                post.draft = False
+                post.created_at = datetime.datetime.now()
+                post.updated_at = datetime.datetime.now()
 
         db.session.add(post)
         db.session.commit()
