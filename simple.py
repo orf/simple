@@ -128,7 +128,7 @@ def index():
 
     posts = posts_master\
         .limit(app.config["POSTS_PER_PAGE"])\
-        .offset(page * app.config["POSTS_PER_PAGE"]) .all()
+        .offset(page * int(app.config["POSTS_PER_PAGE"])) .all()
 
     # Sorry for the verbose names, but this seemed like a sensible
     # thing to do.
