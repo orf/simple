@@ -25,7 +25,7 @@ def input_with_default(*args, **kwargs):
             return name, _type(res)
         except ValueError:
             print "Error: Value %s is not the correct type. Please re-enter" % res
-            return input_with_default(*args, **kwargs)
+            return input_with_default(*args, _type=_type, **kwargs)
 
 
 def _input_with_default(name, prompt, default, func=lambda v: v, _input_func=raw_input):
