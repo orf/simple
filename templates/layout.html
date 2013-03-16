@@ -49,6 +49,13 @@
                                 <li><p><a href="https://plus.google.com/{{ config.GOOGLE_PLUS_PROFILE }}/posts">Google+</a></p></li>
                             {% endif %}
 
+                            {% if config.USE_SUBTOME %}
+                            <li>
+                                <p><a onclick="(function(){var z=document.createElement('script');z.src='https://www.subtome.com/load.js';document.body.appendChild(z);})()"
+                                    href="#">Subscribe</a>
+                            </li>
+                            {% endif %}
+
                             <li>
                                 <p><a href="{{ url_for('feed') }}">Feed</a></p>
                             </li>

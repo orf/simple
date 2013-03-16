@@ -13,7 +13,22 @@ except (ImportError, SyntaxError):
     settings = None
 
 
-def input_with_default(name, prompt, default, func=lambda v: v, _input_func=raw_input):
+def input_with_default(*args, **kwargs):
+    _type = kwargs.pop("_type", None)
+
+    name, res = _input_with_default(*args, **kwargs)
+
+    if _type is None:
+        return name, res
+    else:
+        try:
+            return name, _type(res)
+        except ValueError:
+            print "Error: Value %s is not the correct type. Please re-enter" % res
+            return input_with_default(*args, **kwargs)
+
+
+def _input_with_default(name, prompt, default, func=lambda v: v, _input_func=raw_input):
     """ Small wrapper around raw_input for prompting and defaulting """
     if "--update" in sys.argv and settings is not None:
         # We are updating. If the name already exists in the settings object
@@ -41,7 +56,7 @@ def input_password(*args, **kwargs):
 
 print "%s a Simple config file. Please answer some questions:" % ("Updating" if "--update" in sys.argv else "Generating")
 SETTINGS = (
-    input_with_default("POSTS_PER_PAGE", "Posts per page", 5),
+    input_with_default("POSTS_PER_PAGE", "Posts per page", 5, _type=int),
     input_with_default("POST_CONTENT_ON_HOMEPAGE", "Show the post content on the homepage",
                        "y", lambda v: v.lower()[0] == "y"),
     input_with_default("SHOW_VIEWS_ON_HOMEPAGE", "Show post view count on the homepage?",
@@ -58,7 +73,8 @@ SETTINGS = (
     input_with_default("FONT_NAME", "Font Name (Selected from google font library): ", "Source Sans Pro",
                        lambda v: v.replace(" ", "+")),
     input_with_default("SECRET_KEY", "Secret key", b32encode(urandom(32))),
-    input_with_default("DISQUS_SHORTNAME", "Disqus Shortname", "")
+    input_with_default("DISQUS_SHORTNAME", "Disqus Shortname", ""),
+    input_with_default("USE_SUBTOME", "Enable SubToMe integration", "y", lambda v: v.lower()[0] == "y")
 )
 
 with open("settings.py", "w") as fd:
