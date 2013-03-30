@@ -4,6 +4,17 @@ from os import urandom
 from base64 import b32encode
 import sys
 
+if "--help" in sys.argv:
+    print "create_config.py:"
+    print "Options:"
+    print "  * --fresh"
+    print "    Over-write existing config if it exists"
+    print "  * --update"
+    print "    Update existing config (Default if the config exists)"
+    print "  * --changepass"
+    print "    Change the admin password"
+    sys.exit(1)
+
 try:
     import settings
     if not "--fresh" in sys.argv:
@@ -30,7 +41,8 @@ def input_with_default(*args, **kwargs):
 
 def _input_with_default(name, prompt, default, func=lambda v: v, _input_func=raw_input):
     """ Small wrapper around raw_input for prompting and defaulting """
-    if "--update" in sys.argv and settings is not None:
+    if ("--update" in sys.argv and ("--changepass" in sys.argv and name != "ADMIN_PASSWORD"))\
+            and settings is not None:
         # We are updating. If the name already exists in the settings object
         # then we ignore it and return the existing value
         try:
