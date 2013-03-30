@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash
 from os import urandom
 from base64 import b32encode
 import sys
+import getpass
 
 if "--help" in sys.argv:
     print "create_config.py:"
@@ -62,7 +63,7 @@ def _input_with_default(name, prompt, default, func=lambda v: v, _input_func=raw
 def input_password(*args, **kwargs):
     # This should make input_with_default use getpass.getpass instead of raw_input, however
     # in PyCharm this causes issues. Stick with raw-input for now.
-    name, response = input_with_default(*args, **kwargs)
+    name, response = input_with_default(*args, _input_func=getpass.getpass, **kwargs)
     return name, generate_password_hash(response)
 
 
