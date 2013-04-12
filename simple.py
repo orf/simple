@@ -4,11 +4,12 @@
 import re
 import datetime
 import os
+import time
 from functools import wraps
 from unicodedata import normalize
 from os import urandom
 from base64 import b32encode
-
+from email import utils
 # web stuff and markdown imports
 import markdown
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -147,7 +148,11 @@ def index():
 @app.route("/style.css")
 def render_font_style():
     t = render_template("font_style.css", font_name=app.config["FONT_NAME"])
-    return Response(t, mimetype="text/css")
+    expires = datetime.datetime.now() + datetime.timedelta(days=10)
+    return Response(t, mimetype="text/css",
+                    headers={'Expires': utils.formatdate(
+                        time.mktime(expires.timetuple())
+                    )})
 
 
 @app.route("/<int:post_id>")
@@ -313,8 +318,13 @@ def upload_file():
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
+    resp = send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
+    dt = datetime.datetime.now() + datetime.timedelta(days=30)
+    resp.headers["Expires"] = utils.formatdate(
+        time.mktime(dt.timetuple())
+    )
+    return resp
 
 
 @app.route("/posts.rss")
