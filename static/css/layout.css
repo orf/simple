@@ -13,6 +13,11 @@ time {
 .container-fluid,
 .row-fluid { height: inherit; }
 
+section {
+    border-bottom: 1px solid #ddd;
+    padding: 26px 0 40px 50px;
+}
+
 h1,
 .expandingArea.text-title pre,
 .expandingArea.text-title textarea {
