@@ -182,7 +182,8 @@ def view_post_slug(slug):
     if not any(botname in request.user_agent.string for botname in
         ['Googlebot',  'Slurp',         'Twiceler',     'msnbot',
          'KaloogaBot', 'YodaoBot',      '"Baiduspider',
-         'googlebot',  'Speedy Spider', 'DotBot']):
+         'googlebot',  'Speedy Spider', 'DotBot']) and request.method == "GET":
+        # This really needs to be improved, its not very effective.
         db.session.query(Post)\
             .filter_by(slug=slug)\
             .update({Post.views:Post.views+1})
