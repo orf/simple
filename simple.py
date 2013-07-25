@@ -220,7 +220,7 @@ def edit(post_id):
         if post.title != request.form.get("post_title", ""):
             post.title = request.form.get("post_title", "")
             # If the post has been published already then don't update the slug
-            if not post.draft:
+            if post.draft:
                 post.slug = slugify(post.title)
 
         post.set_content(request.form.get("post_content", ""))
