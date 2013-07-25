@@ -13,7 +13,7 @@ time {
 .container-fluid,
 .row-fluid { height: inherit; }
 
-section {
+full_post {
     border-bottom: 1px solid #ddd;
     padding: 26px 0 40px 50px;
 }
