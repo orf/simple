@@ -133,6 +133,15 @@
                 (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
                      g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
                     s.parentNode.insertBefore(g,s)}(document,'script'));
+                // Track page view times more accurately
+                (function (tos) {
+                  window.setInterval(function () {
+                    tos = (function (t) {
+                      return t[0] == 50 ? (parseInt(t[1]) + 1) + ':00' : (t[1] || '0') + ':' + (parseInt(t[0]) + 10);
+                    })(tos.split(':').reverse());
+                    window.pageTracker ? pageTracker._trackEvent('Time', 'Log', tos) : _gaq.push(['_trackEvent', 'Time', 'Log', tos]);
+                  }, 10000);
+                })('00');
             </script>
         {% endif %}
     </body>
