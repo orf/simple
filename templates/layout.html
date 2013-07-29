@@ -2,7 +2,9 @@
 <html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% if config.USE_FAVICON %}
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        {% endif %}
         <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ url_for('feed') }}">
         <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
         <link href="{{ url_for('static', filename='css/layout.css') }}" rel="stylesheet" media="screen">
