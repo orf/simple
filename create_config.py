@@ -18,7 +18,7 @@ if "--help" in sys.argv:
 
 try:
     import settings
-    if not "--fresh" in sys.argv:
+    if not "--fresh" in sys.argv and not "--changepass" in sys.argv:
         sys.argv.append("--update")
         print "Updating. Use --fresh to over-write existing config"
 except (ImportError, SyntaxError):
