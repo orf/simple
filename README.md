@@ -20,7 +20,7 @@ Features
 Installation
 ============
 Its quite simple. Go download Python 2.7+, Flask, Sqlalchemy and flask-sqlalchemy and you are good to go.
-Clone this repository and create a settings file by running create_config.py, then run simple.py.
+Clone this repository and create a settings file by running create_config.py, then run simple.py. If you want to add a favicon to your blog then drop one (make sure its called 'favicon.ico') in the static folder and restart simple.
 
 ### Updating
 Updates to simple may add, remove or alter settings. Simple ships with a script called create_config.py which can update settings files with changes.
