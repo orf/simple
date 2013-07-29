@@ -42,15 +42,15 @@ def input_with_default(*args, **kwargs):
 
 def _input_with_default(name, prompt, default, func=lambda v: v, _input_func=raw_input):
     """ Small wrapper around raw_input for prompting and defaulting """
-    if "--update" in sys.argv and settings is not None:
-        if not ("--changepass" in sys.argv and name != "ADMIN_PASSWORD"):
-            # We are updating. If the name already exists in the settings object
-            # then we ignore it and return the existing value
-            try:
-                return name, getattr(settings, name)
-            except AttributeError:
-                # Continue on and prompt the user
-                pass
+    if ("--update" in sys.argv or ("--changepass" in sys.argv and name != "ADMIN_PASSWORD"))
+        and settings is not None:
+        # We are updating. If the name already exists in the settings object
+        # then we ignore it and return the existing value
+        try:
+            return name, getattr(settings, name)
+        except AttributeError:
+            # Continue on and prompt the user
+            pass
 
     response = _input_func("%s (Default %s) " % (prompt, default or "None"))
     if not response:
