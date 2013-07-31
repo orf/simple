@@ -143,8 +143,7 @@ def index():
                            now=datetime.datetime.now(),
                            is_more=there_is_more, 
                            current_page=page, 
-                           is_admin=is_admin(),
-                           font_name=app.config["FONT_NAME"])
+                           is_admin=is_admin())
 
 
 @app.route("/style.css")
@@ -170,7 +169,7 @@ def view_post(post_id):
         .update({Post.views:Post.views + 1})
     db.session.commit()
 
-    return render_template("view.html", post=post, is_admin=is_admin(), font_name=app.config["FONT_NAME"])
+    return render_template("view.html", post=post, is_admin=is_admin())
 
 
 @app.route("/<slug>")
@@ -192,7 +191,7 @@ def view_post_slug(slug):
         db.session.commit()
 
     pid = request.args.get("pid", "0")
-    return render_template("view.html", post=post, pid=pid, is_admin=is_admin(), font_name=app.config["FONT_NAME"])
+    return render_template("view.html", post=post, pid=pid, is_admin=is_admin())
 
 
 @app.route("/new", methods=["POST", "GET"])
@@ -297,7 +296,7 @@ def preview(post_id):
         # TODO: Better exception
         return abort(404)
 
-    return render_template("view.html", post=post, preview=True, font_name=app.config["FONT_NAME"])
+    return render_template("view.html", post=post, preview=True)
 
 
 def allowed_file(filename):
