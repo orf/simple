@@ -7,16 +7,11 @@
         {% endif %}
         <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ url_for('feed') }}">
         <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
-        <link href="{{ url_for('static', filename='css/layout.css') }}" rel="stylesheet" media="screen">
-        <link href='//fonts.googleapis.com/css?family={{ config.FONT_NAME|replace(' ','+') }}:400,900' rel='stylesheet' type='text/css'>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.7.2.min.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-modal.js') }}"></script>
-        <link href="{{ url_for('static', filename='css/code_styles.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ url_for('static', filename='css/prettify.css') }}" rel="stylesheet" type="text/css">
-        <script src="{{ url_for('static', filename='js/prettify.js') }}" type="text/javascript"></script>
-        {% block title %}{% endblock %}
-        {% block head %}{% endblock %}
-
+        <link href="{{ url_for('static', filename='css/layout.css') }}" rel="stylesheet" media="screen">
+        <link href="{{ url_for('static', filename='css/code_styles.css') }}" rel="stylesheet" type="text/css">
+        <link href='//fonts.googleapis.com/css?family={{ config.FONT_NAME|replace(' ','+') }}:400,900' rel='stylesheet' type='text/css'>
+        
         <style>
             body {
                 padding-top: 20px;
@@ -40,8 +35,12 @@
                 font-size: 15px;
                 font-weight: 400; }
         </style>
-
-
+        
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.7.2.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-modal.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/prettify.js') }}" type="text/javascript"></script>
+        {% block title %}{% endblock %}
+        {% block head %}{% endblock %}
     </head>
     <body onload="prettyPrint()">
         <div class="container-fluid">
