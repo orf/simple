@@ -17,8 +17,7 @@
                         <br/>
                         {{ post.render_content()|safe }}
                     {% else %}
-                        <p style="color: #999;">Posted: {{ post.created_at.strftime('%B %d, %Y') }}
-                            {% if config.get('SHOW_VIEWS_ON_HOMEPAGE',False) %}, viewed {{ post.views }} times{% endif %}</p>
+                        <p style="color: #999;">Posted: {{ post.created_at.strftime('%B %d, %Y') }}</p>
                     {% endif %}
                 </section>
             </div>
