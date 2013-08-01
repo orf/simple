@@ -64,13 +64,21 @@
                             {% if config.GOOGLE_PLUS_PROFILE %}
                                 <li><p><a href="https://plus.google.com/{{ config.GOOGLE_PLUS_PROFILE }}/posts">Google+</a></p></li>
                             {% endif %}
-
-                            {% if config.USE_SUBTOME %}
                             <li>
+                            {% if config.get('USE_ADDTOANY', False) %}
+                                <!-- AddToAny BEGIN -->
+                                <a class="a2a_dd" href="http://www.addtoany.com/subscribe?linkurl={{ url_for('feed', external=True)|urlencode }}linkname=">Subscribe</a>
+                                <script type="text/javascript">
+                                var a2a_config = a2a_config || {};
+                                a2a_config.linkurl = "{{ url_for('feed', external=True)|urlencode }}";
+                                </script>
+                                <script type="text/javascript" src="//static.addtoany.com/menu/feed.js"></script>
+                                <!-- AddToAny END -->
+                            {% elif config.USE_SUBTOME %}
                                 <p><a onclick="(function(){var z=document.createElement('script');z.src='https://www.subtome.com/load.js';document.body.appendChild(z);})()"
                                     href="#">Subscribe</a>
-                            </li>
                             {% endif %}
+                            </li>
 
                             <li>
                                 <p><a href="{{ url_for('feed') }}">Feed</a></p>
