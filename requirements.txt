@@ -1,5 +1,10 @@
-Flask==0.10
-Flask-SQLAlchemy==0.16
-Markdown==2.2.1
-SQLAlchemy==0.7.10
+Flask==0.10.1
+Flask-SQLAlchemy==1.0
+Jinja2==2.7
+Markdown==2.3.1
+MarkupSafe==0.18
 Pygments==1.6
+SQLAlchemy==0.8.2
+Werkzeug==0.9.3
+distribute==0.7.3
+itsdangerous==0.22
