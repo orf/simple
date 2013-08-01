@@ -164,11 +164,6 @@ def view_post(post_id):
     except Exception:
         return abort(404)
 
-    db.session.query(Post)\
-        .filter_by(id=post_id)\
-        .update({Post.views:Post.views + 1})
-    db.session.commit()
-
     return render_template("view.html", post=post, is_admin=is_admin())
 
 
@@ -179,16 +174,6 @@ def view_post_slug(slug):
     except Exception:
         #TODO: Better exception
         return abort(404)
-
-    if not any(botname in request.user_agent.string for botname in
-        ['Googlebot',  'Slurp',         'Twiceler',     'msnbot',
-         'KaloogaBot', 'YodaoBot',      '"Baiduspider',
-         'googlebot',  'Speedy Spider', 'DotBot']) and request.method == "GET":
-        # This really needs to be improved, its not very effective.
-        db.session.query(Post)\
-            .filter_by(slug=slug)\
-            .update({Post.views:Post.views+1})
-        db.session.commit()
 
     pid = request.args.get("pid", "0")
     return render_template("view.html", post=post, pid=pid, is_admin=is_admin())
