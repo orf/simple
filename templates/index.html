@@ -10,7 +10,7 @@
                 <section id="post-{{ post.id }}"
                 {% if config.get('POST_CONTENT_ON_HOMEPAGE',True) %}class="full_post"{% endif %}>
                     <div class="post_header">
-                        <h1><a href="{{ url_for('view_post_slug', slug=post.slug, pid=current_page) }}">{{ post.title }}</a></h1>
+                        <h1><a href="{{ url_for('view_post_slug', slug=post.slug) }}">{{ post.title }}</a></h1>
                     </div>
 
                     {% if config.get('POST_CONTENT_ON_HOMEPAGE',True) %}
