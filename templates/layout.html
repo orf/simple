@@ -67,7 +67,7 @@
                             <li>
                             {% if config.get('USE_ADDTOANY', False) %}
                                 <!-- AddToAny BEGIN -->
-                                <a class="a2a_dd" href="http://www.addtoany.com/subscribe?linkurl={{ url_for('feed', external=True)|urlencode }}linkname=">Subscribe</a>
+                                <a class="a2a_dd" href="http://www.addtoany.com/subscribe?linkurl={{ url_for('feed', _external=True)|urlencode }}">Subscribe</a>
                                 <script type="text/javascript">
                                 var a2a_config = a2a_config || {};
                                 a2a_config.linkurl = "{{ url_for('feed', external=True)|urlencode }}";
@@ -81,7 +81,7 @@
                             </li>
 
                             <li>
-                                <p><a href="{{ url_for('feed') }}">Feed</a></p>
+                                <p><a href="{{ url_for('feed') }}">View feed</a></p>
                             </li>
 
                             {% if is_admin %}
