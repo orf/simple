@@ -76,18 +76,21 @@ class Post(db.Model):
     updated_at = db.Column(db.DateTime)
 
     def render_content(self):
-        _cached = cache.get("post_%s"%self.id)
+        _cached = cache.get("post_%s" % self.id)
         if _cached is not None:
             return _cached
         text = MARKDOWN_PARSER.convert(self.text)
-        cache.set("post_%s"%self.id, text)
+        cache.set("post_%s" % self.id, text)
         return text
 
     def set_content(self, content):
-        cache.delete("post_%s"%self.id)
+        cache.delete("post_%s" % self.id)
+        cache.delete("rss_feed")
+
         self.text = content
 
-    def get_content(self): return self.text
+    def get_content(self):
+        return self.text
 
 
 try:
@@ -144,16 +147,6 @@ def index():
                            is_more=there_is_more, 
                            current_page=page, 
                            is_admin=is_admin())
-
-
-@app.route("/style.css")
-def render_font_style():
-    t = render_template("font_style.css", font_name=app.config["FONT_NAME"])
-    expires = datetime.datetime.now() + datetime.timedelta(days=10)
-    return Response(t, mimetype="text/css",
-                    headers={'Expires': utils.formatdate(
-                        time.mktime(expires.timetuple())
-                    )})
 
 
 @app.route("/<int:post_id>")
@@ -237,6 +230,8 @@ def delete(post_id):
         db.session.delete(post)
         db.session.commit()
 
+    cache.delete("rss_feed")
+
     return redirect(request.args.get("next", "")
                     or request.referrer or url_for('index'))
 
@@ -318,12 +313,16 @@ def uploaded_file(filename):
 
 @app.route("/posts.rss")
 def feed():
-    posts = db.session.query(Post)\
-        .filter_by(draft=False)\
-        .order_by(Post.created_at.desc())\
-        .limit(10).all()
+    rendered = cache.get("rss_feed")
+    if rendered is None:
+        posts = db.session.query(Post)\
+            .filter_by(draft=False)\
+            .order_by(Post.created_at.desc())\
+            .limit(10).all()
+        rendered = render_template('index.xml', posts=posts)
+        cache.set("rss_feed", rendered)
 
-    response = make_response(render_template('index.xml', posts=posts))
+    response = make_response(rendered)
     response.mimetype = "application/xml"
     return response
 
