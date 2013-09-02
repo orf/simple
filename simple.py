@@ -354,4 +354,16 @@ if __name__ == "__main__":
             except IOError:
                 pass
 
+    if not app.debug:
+        import logging
+        if not os.path.exists("logs"):
+            os.mkdir("logs")
+        app.logger.log("Logging exceptions to %s" % os.path.join(os.getcwd(),
+                                                                 'logs/flask.log'),
+                       logging.INFO)
+
+        file_handler = logging.FileHandler('logs/flask.log')
+        file_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(file_handler)
+
     app.run(host="0.0.0.0")
