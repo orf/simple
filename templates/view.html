@@ -42,6 +42,7 @@
             <script type="text/javascript">
                 var disqus_shortname = '{{ config.DISQUS_SHORTNAME }}';
                 var disqus_identifier = '{{ post.id }}';
+                var disqus_url = '{{ url_for('view_post', post_id=post.id, _external=True) }}';
                 
                 /* * * DON'T EDIT BELOW THIS LINE * * */
                 (function() {
