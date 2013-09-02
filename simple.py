@@ -55,6 +55,18 @@ if pygments is not None:
 MARKDOWN_PARSER = markdown.Markdown(extensions=extensions,
                                     output_format="html5")
 
+if not app.debug:
+    import logging
+    if not os.path.exists("logs"):
+        os.mkdir("logs")
+    app.logger.log("Logging exceptions to %s" % os.path.join(os.getcwd(),
+                                                             'logs/flask.log'),
+                   logging.INFO)
+
+    file_handler = logging.FileHandler('logs/flask.log')
+    file_handler.setLevel(logging.ERROR)
+    app.logger.addHandler(file_handler)
+
 
 class Post(db.Model):
     def __init__(self, title=None, created_at=None):
@@ -353,17 +365,5 @@ if __name__ == "__main__":
                     fd.write(to_write)
             except IOError:
                 pass
-
-    if not app.debug:
-        import logging
-        if not os.path.exists("logs"):
-            os.mkdir("logs")
-        app.logger.log("Logging exceptions to %s" % os.path.join(os.getcwd(),
-                                                                 'logs/flask.log'),
-                       logging.INFO)
-
-        file_handler = logging.FileHandler('logs/flask.log')
-        file_handler.setLevel(logging.ERROR)
-        app.logger.addHandler(file_handler)
 
     app.run(host="0.0.0.0")
