@@ -168,7 +168,7 @@ def view_post(post_id):
     except Exception:
         return abort(404)
 
-    return render_template("view.html", post=post, is_admin=is_admin())
+    return render_template("view.html", post=post, is_admin=is_admin(), preview=False)
 
 
 @app.route("/<slug>")
@@ -180,7 +180,7 @@ def view_post_slug(slug):
         return abort(404)
 
     pid = request.args.get("pid", "0")
-    return render_template("view.html", post=post, pid=pid, is_admin=is_admin())
+    return render_template("view.html", post=post, pid=pid, is_admin=is_admin(), preview=False)
 
 
 @app.route("/new", methods=["POST", "GET"])
