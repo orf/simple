@@ -113,9 +113,8 @@ except Exception:
 
 def is_admin():
     auth = request.authorization
-    if not auth or not auth.password\
-        or not (auth.username == app.config["ADMIN_USERNAME"]
-                and check_password_hash(app.config["ADMIN_PASSWORD"], auth.password)):
+    if not auth or not (auth.username == app.config["ADMIN_USERNAME"]
+                        and check_password_hash(app.config["ADMIN_PASSWORD"], auth.password)):
         return False
     return True
 
