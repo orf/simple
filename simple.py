@@ -59,9 +59,9 @@ if not app.debug:
     import logging
     if not os.path.exists("logs"):
         os.mkdir("logs")
-    app.logger.log("Logging exceptions to %s" % os.path.join(os.getcwd(),
-                                                             'logs/flask.log'),
-                   logging.INFO)
+    app.logger.log(logging.INFO,
+                   "Logging exceptions to %s" % os.path.join(os.getcwd(),
+                                                             'logs/flask.log'))
 
     file_handler = logging.FileHandler('logs/flask.log')
     file_handler.setLevel(logging.ERROR)
