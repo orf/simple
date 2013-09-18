@@ -7,9 +7,10 @@
 {% endblock %}
 
 {% block head %}
+		<script src="{{ url_for('static', filename='js/tabindent.js') }}" type="text/javascript"></script>
         <script>
             window.ondragover = function(e) {e.preventDefault()};
-            window.ondrop = function(e) {e.preventDefault(); upload(e.dataTransfer.files); };
+            window.ondrop = function(e) {e.preventDefault(); upload(e.dataTransfer.files); };            
 
             function upload(files) {
                 $("#upload_list").empty();
@@ -175,7 +176,7 @@
                                 <div class="span7 offset1">
                                     <div class="expandingArea text-content" id="edit_post_area">
                                         <pre><span></span><br></pre>
-                                        <textarea cols="40" id="post_content" name="post_content" placeholder="Write post here" rows="20">{{ post.text }}</textarea>
+                                        <textarea cols="40" id="post_content" name="post_content" class="tabIndent" placeholder="Write post here" rows="20">{{ post.text }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -320,5 +321,7 @@
         </div>
     </div>
 
-
+	<script>
+		tabIndent.renderAll();
+	</script>
 {% endblock %}
