@@ -13,6 +13,7 @@ from email import utils
 # web stuff and markdown imports
 import markdown
 from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.security import check_password_hash
 from flask import render_template, request, Flask, flash, redirect, url_for, \
     abort, jsonify, Response, make_response
@@ -110,7 +111,6 @@ try:
 except Exception:
     pass
 
-
 def is_admin():
     auth = request.authorization
     if not auth or not (auth.username == app.config["ADMIN_USERNAME"]
@@ -159,26 +159,34 @@ def index():
                            current_page=page, 
                            is_admin=is_admin())
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html', now=datetime.datetime.now(), is_admin=is_admin()), 404
+    
+@app.errorhandler(500)
+def page_error(e):
+    return render_template('500.html', now=datetime.datetime.now(), is_admin=is_admin()), 500
 
 @app.route("/<int:post_id>")
 def view_post(post_id):
     """ view_post renders a post and returns the Response object """
+    
     try:
         post = db.session.query(Post).filter_by(id=post_id, draft=False).one()
-    except Exception:
-        return abort(404)
-
+    except NoResultFound:
+        abort(404)
+    
     return render_template("view.html", post=post, is_admin=is_admin(), preview=False)
 
 
 @app.route("/<slug>")
 def view_post_slug(slug):
+    
     try:
         post = db.session.query(Post).filter_by(slug=slug, draft=False).one()
-    except Exception:
-        #TODO: Better exception
-        return abort(404)
-
+    except NoResultFound:
+        abort(404)
+        
     pid = request.args.get("pid", "0")
     return render_template("view.html", post=post, pid=pid, is_admin=is_admin(), preview=False)
 
@@ -200,9 +208,8 @@ def new_post():
 def edit(post_id):
     try:
         post = db.session.query(Post).filter_by(id=post_id).one()
-    except Exception:
-        #TODO: better exception
-        return abort(404)
+    except NoResultFound:
+        abort(404)
 
     if request.method == "GET":
         return render_template("edit.html", post=post)
@@ -262,9 +269,9 @@ def admin():
 def save_post(post_id):
     try:
         post = db.session.query(Post).filter_by(id=post_id).one()
-    except Exception:
-        # TODO Better exception
-        return abort(404)
+    except NoResultFound:
+        abort(404)
+        
     if post.title != request.form.get("title", ""):
         post.title = request.form.get("title", "")
         post.slug = slugify(post.title)
@@ -283,8 +290,7 @@ def save_post(post_id):
 def preview(post_id):
     try:
         post = db.session.query(Post).filter_by(id=post_id).one()
-    except Exception:
-        # TODO: Better exception
+    except NoResultFound:
         return abort(404)
 
     return render_template("view.html", post=post, preview=True)
