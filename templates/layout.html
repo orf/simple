@@ -71,7 +71,9 @@
                             {% elif config.USE_ADDTOANY %}
                                 <p>
                                 <!-- AddToAny BEGIN -->
-<a class="a2a_dd" href="http://www.addtoany.com/subscribe?linkurl={{ url_for('feed', _external=True)|urlencode }}&amp;linkname=">Subscribe</a>
+<a id="subscribe_button"
+   class="a2a_dd"
+   href="http://www.addtoany.com/subscribe?linkurl={{ url_for('feed', _external=True)|urlencode }}&amp;linkname=">Subscribe</a>
 <script type="text/javascript">
 var a2a_config = a2a_config || {};
 a2a_config.linkurl = "{{ url_for('feed', _external=True) }}";
@@ -168,6 +170,13 @@ a2a_config.onclick = 1;
                     window.pageTracker ? pageTracker._trackEvent('Time', 'Log', tos) : _gaq.push(['_trackEvent', 'Time', 'Log', tos]);
                   }, 30000);
                 })('00');
+
+                $(document).ready(function(){
+                    $("#subscribe_button").on("click", function(){
+                        window.pageTracker ? pageTracker._trackEvent('Subscribe_clicked') : _gaq.push(['_trackEvent', 'Subscribe_clicked']);
+                    });
+                })
+
             </script>
         {% endif %}
     </body>
