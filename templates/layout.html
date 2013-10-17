@@ -71,10 +71,10 @@
                             {% elif config.USE_ADDTOANY %}
                                 <p>
                                 <!-- AddToAny BEGIN -->
-<a class="a2a_dd" href="http://www.addtoany.com/subscribe?linkurl={{ url_for('feed')|urlencode }}&amp;linkname=">Subscribe</a>
+<a class="a2a_dd" href="http://www.addtoany.com/subscribe?linkurl={{ url_for('feed', _external=True)|urlencode }}&amp;linkname=">Subscribe</a>
 <script type="text/javascript">
 var a2a_config = a2a_config || {};
-a2a_config.linkurl = "{{ url_for('feed') }}";
+a2a_config.linkurl = "{{ url_for('feed', _external=True) }}";
 a2a_config.onclick = 1;
 </script>
 <script type="text/javascript" src="//static.addtoany.com/menu/feed.js"></script>
