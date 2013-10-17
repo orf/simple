@@ -35,13 +35,14 @@
         <a class="btn btn-inverse" href="{{ url_for('index', page=pid) }}">Back to Blog</a>
         <br/>
 
-        {% if config.DISQUS_SHORTNAME and not post.draft %}
+        {% if config.DISQUS_SHORTNAME and not preview %}
             <br/><br/>
 
             <div id="disqus_thread"></div>
             <script type="text/javascript">
                 var disqus_shortname = '{{ config.DISQUS_SHORTNAME }}';
                 var disqus_identifier = '{{ post.id }}';
+                var disqus_url = '{{ url_for('view_post', post_id=post.id, _external=True) }}';
                 
                 /* * * DON'T EDIT BELOW THIS LINE * * */
                 (function() {
