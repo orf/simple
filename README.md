@@ -44,3 +44,7 @@ Screenshots
 ![Draft](http://i.imgur.com/KkGtlTx.png)
 
 ![Live](http://i.imgur.com/tsiSsED.png)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/orf/simple/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
