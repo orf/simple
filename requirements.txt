@@ -6,5 +6,4 @@ MarkupSafe==0.18
 Pygments==1.6
 SQLAlchemy==0.8.2
 Werkzeug==0.9.4
-distribute==0.7.3
 itsdangerous==0.23
