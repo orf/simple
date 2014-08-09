@@ -33,7 +33,7 @@ app.config.from_object('settings')
 app.secret_key = app.config["SECRET_KEY"]
 
 UPLOAD_FOLDER = 'uploads/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['USE_FAVICON'] =  os.path.exists(os.path.join(app.static_folder, "favicon.ico"))
 
@@ -42,9 +42,9 @@ db = SQLAlchemy(app)
 cache_directory = os.path.dirname(__file__)
 try:
     cache = FileSystemCache(os.path.join(cache_directory, "cache"))
-except Exception, e:
-    print "Could not create cache folder, caching will be disabled."
-    print "Error: %s" % e
+except Exception as e:
+    print("Could not create cache folder, caching will be disabled.")
+    print("Error: %s" % e)
     cache = NullCache()
 
 _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
@@ -306,7 +306,7 @@ def allowed_file(filename):
 def upload_file():
     if request.method == 'POST':
         file_upload = request.files['file']
-        if file and allowed_file(file_upload.filename):
+        if file_upload and allowed_file(file_upload.filename):
             filename = secure_filename(file_upload.filename)
             key = b32encode(urandom(5))
             filename, extension = os.path.splitext(filename)
@@ -348,7 +348,7 @@ def slugify(text, delim=u'-'):
     """Generates an slightly worse ASCII-only slug."""
     result = []
     for word in _punct_re.split(text.lower()):
-        word = normalize('NFKD', unicode(word))
+        word = normalize('NFKD', word)
         if word:
             result.append(word)
     slug = delim.join(result)
