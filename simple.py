@@ -307,11 +307,11 @@ def allowed_file(filename):
 def upload_file():
     if request.method == 'POST':
         file_upload = request.files['file']
-        if file and allowed_file(file_upload.filename):
+        if file_upload and allowed_file(file_upload.filename):
             filename = secure_filename(file_upload.filename)
             key = b32encode(urandom(5))
             filename, extension = os.path.splitext(filename)
-            filename = filename + '_' + key + extension
+            filename = filename + '_' + str(key) + extension
             file_upload.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             url = url_for('uploaded_file', filename=filename)
             return json.dumps({'status': 'ok', 'url': url, 'name': filename})
