@@ -2,25 +2,26 @@
 from werkzeug.security import generate_password_hash
 from os import urandom
 from base64 import b32encode
+from six import string_types
 import sys
 import getpass
 
 if "--help" in sys.argv:
-    print "create_config.py:"
-    print "Options:"
-    print "  * --fresh"
-    print "    Over-write existing config if it exists"
-    print "  * --update"
-    print "    Update existing config (Default if the config exists)"
-    print "  * --changepass"
-    print "    Change the admin password"
+    print("create_config.py:")
+    print("Options:")
+    print("  * --fresh")
+    print("    Over-write existing config if it exists")
+    print("  * --update")
+    print("    Update existing config (Default if the config exists)")
+    print("  * --changepass")
+    print("    Change the admin password")
     sys.exit(1)
 
 try:
     import settings
     if not "--fresh" in sys.argv and not "--changepass" in sys.argv:
         sys.argv.append("--update")
-        print "Updating. Use --fresh to over-write existing config"
+        print("Updating. Use --fresh to over-write existing config")
 except (ImportError, SyntaxError):
     settings = None
 
@@ -36,11 +37,23 @@ def input_with_default(*args, **kwargs):
         try:
             return name, _type(res)
         except ValueError:
-            print "Error: Value %s is not the correct type. Please re-enter" % res
+            print("Error: Value %s is not the correct type. Please re-enter" % (res))
             return input_with_default(*args, _type=_type, **kwargs)
 
+def _default_input_func(*args, **kwargs):
+    """
+    Check wether we can use `input()` from python3.
+    If not, fallback to `raw_input()`.
+    """
+    func = None	
+    try:
+        func = input(*args, **kwargs)
+    except NameError:
+        func = raw_input(*args, **kwargs)
 
-def _input_with_default(name, prompt, default, func=lambda v: v, _input_func=raw_input):
+    return func
+
+def _input_with_default(name, prompt, default, func=lambda v: v, _input_func=_default_input_func):
     """ Small wrapper around raw_input for prompting and defaulting """
     if ("--update" in sys.argv or ("--changepass" in sys.argv and name != "ADMIN_PASSWORD")) and settings is not None:
         # We are updating. If the name already exists in the settings object
@@ -66,7 +79,7 @@ def input_password(*args, **kwargs):
     return name, generate_password_hash(response)
 
 
-print "%s a Simple config file. Please answer some questions:" % ("Updating" if "--update" in sys.argv else "Generating")
+print("%s a Simple config file. Please answer some questions:" % ("Updating" if "--update" in sys.argv else "Generating"))
 SETTINGS = (
     input_with_default("POSTS_PER_PAGE", "Posts per page", 5, _type=int),
     input_with_default("POST_CONTENT_ON_HOMEPAGE", "Show the post content on the homepage",
@@ -91,9 +104,9 @@ SETTINGS = (
 with open("settings.py", "w") as fd:
     fd.write("# -*- coding: utf-8 -*-\n")
     for name, value in SETTINGS:
-        if isinstance(value, basestring):
+        if isinstance(value, string_types):
             value = "'%s'" % value.replace("'", "\\'")
         fd.write("%s = %s\n" % (name, value))
     fd.flush()
 
-print "Created!"
+print("Created!")

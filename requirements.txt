@@ -7,3 +7,4 @@ Pygments==1.6
 SQLAlchemy==0.8.2
 Werkzeug==0.9.4
 itsdangerous==0.23
+six==1.7.3
