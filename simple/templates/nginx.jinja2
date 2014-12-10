@@ -1,7 +1,7 @@
 server {
     listen 80 default;
     client_max_body_size 4G;
-    server_name {{ domain }};
+    server_name {{ domain_name }};
     keepalive_timeout 5;
 
     gzip on;
@@ -9,7 +9,7 @@ server {
     gzip_proxied any;
     gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript text/x-js;
 
-    access_log /var/log/nginx/{{ domain }}.log timed_combined;
+    access_log {{ cwd }}/logs/access.log timed_combined;
 
     location /static/ {
             alias {{ static_root }};

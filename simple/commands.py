@@ -76,6 +76,7 @@ def nginx_config(domain_name, proxy_port="9000", use_pagespeed=False):
         print("Error: Cannot import simple. Have you created a config file?")
         return
 
+    cwd = os.getcwd()
     static_root = str(pathlib.Path(simple.__file__).parent / "static")
     result = app.app.jinja_env.get_template("nginx.jinja2").render(**locals())
     print(result)
