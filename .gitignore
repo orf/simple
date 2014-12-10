@@ -3,7 +3,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-.idea
+.idea/
 
 # C extensions
 *.so
