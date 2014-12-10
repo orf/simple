@@ -113,6 +113,7 @@ def fake_posts(count=10):
                     created=created,
                     posted=posted,
                     modified=modified,
+                    is_special_page=False,
                     content=content,
                     draft=random.choice((True, False))
                 )
@@ -152,6 +153,7 @@ def import_existing(database_file):
                         posted=dateutil.parser.parse(page.created_at),
                         modified=dateutil.parser.parse(page.updated_at),
                         content=page.text or " ",
+                        is_special_page=False,
                         draft=page.draft == 1)
             pass
 
