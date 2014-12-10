@@ -67,6 +67,7 @@ def create():
         fd.write("DATABASE_FILE = 'posts.db'\n")
         fd.write("SECRET_KEY = {0}\n".format(os.urandom(15)))
 
+    print("Copying static files")
     static_root = str(pathlib.Path(simple.__file__).parent / "static")
     shutil.copytree(static_root, "static")
 
@@ -81,7 +82,7 @@ def nginx_config(domain_name, proxy_port="9000", use_pagespeed=False):
         return
 
     cwd = os.getcwd()
-    static_root = str(pathlib.Path(simple.__file__).parent / "static")
+    static_root = str(pathlib.Path.cwd() / "static")
     result = app.app.jinja_env.get_template("nginx.jinja2").render(**locals())
     print(result)
 
