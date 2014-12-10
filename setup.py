@@ -3,10 +3,15 @@ from setuptools import setup
 setup(
     name='simple',
     version='2',
-    packages=[''],
+    packages=['simple'],
     url='',
     license='',
-    author='Tom Forbes',
+    author='Orf',
     author_email='tom@tomforb.es',
-    description='Lightweight Python blog'
+    description='',
+    requires=["flask", "flask_seasurf", "pony", "markdown", "python_dateutil",
+              "flask_basicauth", 'requests', 'flask_script'],
+    entry_points={
+        'console_scripts': ['simple=simple.commands:main']
+    }
 )

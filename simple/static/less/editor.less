@@ -1,0 +1,69 @@
+
+.editor {
+  width: 100%;
+  resize: none;
+
+  border: none;
+  overflow: auto;
+  outline: none;
+
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.new-post {
+  border: none;
+  overflow: auto;
+  outline: none;
+
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+.entry-title:focus {
+    outline: 0px solid transparent;
+  }
+
+.edit-title {
+  max-width: 70%;
+  margin: 0 auto !important;
+}
+
+.save-indicator {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+}
+
+.save-indicator.unsaved > i {
+  color: darkred;
+}
+
+.sidebar-content {
+  position: fixed;
+  top: 40%;
+}
+
+.sidebar-item {
+  margin: 0px 2px 20px 2px;
+  padding: 10px 15px;
+  background-color: @white;
+  box-shadow: 0 0 0 0, 0 6px 12px fade(@black,10);
+}
+
+.left-img-button{
+  position: absolute;
+  left: 0;
+  bottom: 50%;
+  margin-left: 20px;
+  z-index: 90001
+}
+
+.right-img-button{
+  position: absolute;
+  right: 0;
+  bottom: 50%;
+  margin-right: 20px;
+}

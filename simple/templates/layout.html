@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <!-- For all browsers -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <!-- Webfonts -->
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+    <script src="{{ url_for('static', filename='js/vendor/modernizr-2.6.2.custom.min.js') }}"></script>
+    {% block extra_css %}{% endblock %}
+</head>
+
+{% block body %}
+{% endblock %}
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="{{ url_for('static', filename="js/vendor/jquery-1.9.1.min.js") }}"><\/script>')</script>
+<script src="{{ url_for('static', filename="js/scripts.min.js") }}"></script>
+{% block extra_scripts %}{% endblock %}
+</html>

@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<body id="post-index"{% if show_header %} class="feature"{% endif %}>
+
+    {% if show_header %}
+    <div class="entry-header">
+        <div class="entry-image">
+            <img src="{{ url_for('header') }}">
+        </div>
+
+        <div class="image-credit">
+            Image source: {{ config.SITE_HEADER_COPYRIGHT }}
+        </div>
+    </div>
+    {% include "nav.jinja2" %}
+    {% endif %}
+
+    <header class="header-title">
+        <div class="header-title-wrap">
+        {% block header_title scoped %}
+            <h1 class="entry-title"><a href="">{{ title }}</a></h1>
+        {% endblock %}
+        </div>
+    </header>
+
+    <div id="main" role="main">
+        <div id="items">
+            {% for post in posts %}
+            <article class="hentry" data-published="{{ not post.draft }}">
+                <header>
+                    <div class="entry-meta">
+                        {% block entry_meta scoped %}
+                            <span class="entry-date date published updated">
+                                <time datetime="{{ post.posted.isoformat() }}"><a href="">{{ post.posted.date() }}</a></time
+                            </span>
+                        {% endblock %}
+                    </div><!-- /.entry-meta -->
+
+                    <h1 class="entry-title">
+                        {% block entry_title scoped %}
+                            <a href="{{ url_for('view_post', slug=post.slug) }}" rel="bookmark" title="{{ post.title }}">
+                                {{ post.title }}
+                            </a>
+                        {% endblock %}
+                    </h1>
+                </header>
+                {% if not post.draft %}
+                <div class="entry-content">
+                    {% block entry_content scoped %}
+                        {{ post.rendered_content()|safe }}
+                    {% endblock %}
+                </div><!-- /.entry-content -->
+                {% endif %}
+            </article><!-- /.hentry -->
+            {% endfor %}
+        </div>
+
+        {% block main_bottom %}{% endblock %}
+    </div>
+</body>
+
+{% endblock %}

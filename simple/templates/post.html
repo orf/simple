@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <body id="post" {% if post.header_image %}class="feature"{% endif %}>
+        {% include "nav.jinja2" %}
+
+        {% if post.header_image %}
+        <div class="entry-header">
+            <div class="entry-image">
+                <img src="{{ post.header_image }}">
+            </div>
+
+            <div class="image-credit">
+                Image source: {{ post.header_caption }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div id="main" role="main">
+            <article class="hentry">
+                <header class="header-title">
+                    <div class="header-title-wrap">
+                        <h1 class="entry-title"><a href="">{{ post.title }}</a></h1>
+                        <h2>{{ (post.posted or now()).strftime("%B %d, %Y") }}</h2>
+                    </div>
+                </header>
+                <div class="entry-content">
+                    {{ post.rendered_content()|safe }}
+                    <footer class="entry-meta">
+                        <span class="entry-tags">
+                            {% for tag in post.tags %}
+                            <a href="" title="Pages tagged {{ tag }}" class="tag">{{ tag }}</a>
+                            {% endfor %}
+                        </span>
+
+                        <span>
+                            <a href="" rel="bookmark" title="{{ post.title }}">{{ post.title }}</a>
+                            was published on
+                            <span class="entry-date date published updated">
+                                <time datetime="{{ (post.posted or now()).isoformat() }}">
+                                    {{ (post.posted or now()).strftime("%B %d, %Y") }}
+                                </time>
+                            </span>
+                        </span>
+
+                        {% if post.modified %}
+                            (revised:
+                            <span class="entry-date date modified">
+                                <time datetime="{{ post.modified.isoformat() }}">{{ post.modified.strftime("%B %d, %Y") }}</time>
+                            </span>
+                            )
+                        {% endif %}
+
+                        <div class="social-share">
+                          <ul class="socialcount socialcount-small inline-list">
+                            <li class="facebook"><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url|urlencode }}" title="Share on Facebook"><span class="count"><i class="fa fa-facebook-square"></i> Like</span></a></li>
+                            <li class="twitter"><a href="https://twitter.com/intent/tweet?text={{ request.url|urlencode }}" title="Share on Twitter"><span class="count"><i class="fa fa-twitter-square"></i> Tweet</span></a></li>
+                            <li class="googleplus"><a href="https://plus.google.com/share?url={{ request.url|urlencode }}" title="Share on Google Plus"><span class="count"><i class="fa fa-google-plus-square"></i> +1</span></a></li>
+                          </ul>
+                        </div>
+                    </footer>
+                </div>
+            </article>
+        </div>
+    </body>
+{% endblock %}

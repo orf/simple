@@ -1,0 +1,128 @@
+{% extends "index.html" %}
+
+{% block entry_meta %}
+    <span>
+        {{ post.content.split(" ")|length }} words
+        <i>Started {{ post.created_ago().days }} days ago</i>
+    </span>
+
+    {% if post.draft %}
+        <div class="pull-right">
+            <strong>Draft</strong>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block entry_title %}
+    <a href="{{ url_for('view_draft', id=post.id) }}" rel="bookmark" title="{{ post.title }}">
+        {{ post.title }}
+    </a>
+{% endblock %}
+
+{% block entry_content %}
+
+{% endblock %}
+
+{% block main_bottom %}
+    <div class="posts_sidebar">
+        <div class="posts-sidebar-item" id="add_button">
+            <div class="posts-sidebar-icon">
+                <a href="#"><i class="fa fa-plus-square fa-2x"></i></a>
+            </div>
+            <div class="posts-sidebar-text">
+                New
+            </div>
+        </div>
+
+        <div class="posts-sidebar-item" id="drafts_button">
+            <div class="posts-sidebar-icon">
+                <a href="#"><i class="fa fa-file-text-o fa-2x"></i></a>
+            </div>
+            <div class="posts-sidebar-text">
+                Drafts
+            </div>
+        </div>
+
+        <div class="posts-sidebar-item" id="published_button">
+            <div class="posts-sidebar-icon disabled">
+                <a href="#"><i class="fa fa-file-o fa-2x"></i></a>
+            </div>
+            <div class="posts-sidebar-text">
+                Published
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="{{ url_for('static', filename='js/plugins/jquery.contenteditable.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/plugins/jquery.hotkeys.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='js/plugins/jquery.caret-1.5.2.min.js') }}" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function(){
+            $("article[data-published='True']").hide();
+
+            var toggleButton = function(button, data_value){
+                button.click(function(){
+                    var icon = button.find(".posts-sidebar-icon");
+                    var articles = $("#items article");
+                    if (icon.hasClass("disabled")) {
+                        // Show all drafts
+                        $.each(articles, function(idx, item){
+                            if ($(item).data("published") == data_value) {
+                                $(item).show();
+                            }
+                        });
+                        icon.removeClass("disabled");
+                    } else {
+                        $.each(articles,function(idx, item){
+                            if ($(item).data("published") == data_value) {
+                                $(item).hide();
+                            }
+                        });
+                        icon.addClass("disabled");
+                    }
+                })
+            };
+
+            toggleButton($("#drafts_button"), "False");
+            toggleButton($("#published_button"), "True");
+
+            $("#drafts_button").click(function(){
+                var dbutton = $("#drafts_button");
+
+            });
+
+            $("#add_button").click(function(){
+                var items = $("#items");
+                var new_post_articles = items.find("article.new-post-article");
+                if (new_post_articles.length > 0){
+                    new_post_articles.remove();
+                    return;
+                }
+
+                var header = $("<h1 class='new-post'>");
+                items.prepend(
+                    $("<article class='hentry new-post-article'>").append(
+                        $("<header>").append(
+                            header.contentEditable({
+                                "placeholder": "Title here",
+                                "newLineOnEnterKey": false
+                            }).bind('keydown', 'return', function(){
+                                $.post("{{ url_for('new_post') }}", {
+                                    title: header.text(),
+                                    _csrf_token: '{{ csrf_token() }}'
+                                }, function(resp){
+                                    if (resp.success == true){
+                                        window.location.href = resp.url;
+                                    }
+                                })
+                            })
+                        )
+                    )
+                )
+            });
+        })
+    </script>
+{% endblock %}

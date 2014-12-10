@@ -1,0 +1,26 @@
+<nav id="dl-menu" class="dl-menuwrapper" role="navigation">
+    <button class="dl-trigger">Open Menu</button>
+    <ul class="dl-menu">
+        <li><a href="{{ url_for('index') }}">Home</a></li>
+        <li>
+            {% if config.GITHUB_USERNAME %}
+            <img src="https://avatars.githubusercontent.com/{{ config.GITHUB_USERNAME }}" alt="tom photo" class="author-photo">
+            {% endif %}
+            <h4>{{ config.AUTHOR_NAME }}</h4>
+            <p>{{ config.AUTHOR_BIO }}</p>
+        </li>
+        {% for page in special_pages %}
+        <li><a href="{{ url_for('view_static_page', slug=page.slug) }}">Learn More</a></li>
+        {% endfor %}
+        {% if config.GITHUB_USERNAME %}
+        <li>
+            <a href="https://github.com/{{ config.GITHUB_USERNAME }}"><i class="fa fa-github"></i>Github</a>
+        </li>
+        {% endif %}
+        {% if config.GITHUB_USERNAME %}
+        <li>
+            <a href="mailto:{{ config.CONTACT_EMAIL }}"><i class="fa fa-envelope"></i> Email</a>
+        </li>
+        {% endif %}
+    </ul><!-- /.dl-menu -->
+</nav><!-- /.dl-menuwrapper -->
