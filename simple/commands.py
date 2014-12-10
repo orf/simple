@@ -77,7 +77,7 @@ def nginx_config(domain_name, proxy_port="9000", use_pagespeed=False):
         return
 
     static_root = str(pathlib.Path(simple.__file__).parent / "static")
-    result = app.jinja_env.get_template("nginx.jinja2").render(**locals())
+    result = app.app.jinja_env.get_template("nginx.jinja2").render(**locals())
     print(result)
 
 
