@@ -3,6 +3,7 @@ import sqlite3
 import random
 import os
 import pathlib
+import shutil
 
 from flask.ext.script import Manager, prompt_bool
 import dateutil.parser
@@ -65,6 +66,9 @@ def create():
         fd.write("CACHE_DIR = 'cache/'\n")
         fd.write("DATABASE_FILE = 'posts.db'\n")
         fd.write("SECRET_KEY = {0}\n".format(os.urandom(15)))
+
+    static_root = str(pathlib.Path(simple.__file__).parent / "static")
+    shutil.copytree(static_root, "static")
 
 
 @manager.command
