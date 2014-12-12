@@ -9,7 +9,7 @@ from urllib import parse
 import mimetypes
 import sys
 
-from flask import Flask, render_template, abort, request, Response, redirect, url_for, send_from_directory, send_file, \
+from flask import Flask, render_template, abort, request, Response, redirect, url_for, send_from_directory, \
     make_response
 from flask.ext.basicauth import BasicAuth
 from werkzeug.utils import secure_filename
@@ -22,6 +22,7 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.contrib.cache import FileSystemCache
 
 from simple.bing_images import get_latest_header_images
+from simple.util import iter_to_stream, Pagination
 
 
 if not os.getcwd() in sys.path:
@@ -31,6 +32,7 @@ app = Flask(__name__)
 
 app.config.from_object("simple_settings")
 app.secret_key = app.config["SECRET_KEY"]
+app.static_folder = os.path.join(os.getcwd(), "static")
 db = orm.Database('sqlite',
                   os.path.join(os.getcwd(), app.config["DATABASE_FILE"]), create_db=True)
 cache = FileSystemCache(app.config["CACHE_DIR"])
@@ -40,6 +42,11 @@ app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), "uploads")
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app.jinja_env.globals.update(now=datetime.datetime.now)
+
+md = markdown.Markdown(
+    extensions=['fenced_code', 'toc'],
+    output_format="html5"
+)
 
 
 class Post(db.Entity):
@@ -84,7 +91,7 @@ class Post(db.Entity):
         if hit:
             return hit
 
-        content = markdown.markdown(self.content)
+        content = md.convert(self.content)
         cache.set(key, content)
         return content
 
@@ -131,33 +138,23 @@ def slugify(string):
                   .lower())
 
 
-# https://stackoverflow.com/questions/6657820/python-convert-an-iterable-to-a-stream
-class iter_to_stream(object):
-    def __init__(self, iterable):
-        self.buffered = b""
-        self.iter = iter(iterable)
-
-    def read(self, size):
-        result = b""
-        while size > 0:
-            data = self.buffered or next(self.iter, None)
-            self.buffered = ""
-            if data is None:
-                break
-            size -= len(data)
-            if size < 0:
-                data, self.buffered = data[:size], data[size:]
-            result += data
-        return result
-
-
 @app.route('/')
 @orm.db_session
 def index():
-    special_pages = []  #orm.select(p for p in Post if p.is_special_page is True)
+    special_pages = []
+    posts_qs = orm.select(p for p in Post if p.draft is False).order_by(orm.desc(Post.posted))
+
+    try:
+        start_page = int(request.args.get("page", 1))
+        if start_page < 1: start_page = 1
+    except ValueError:
+        start_page = 1
+
+    pag = Pagination(start_page, 5, posts_qs.count())
+    posts = posts_qs.limit(5, offset=pag.offset)
 
     return render_template("index.html",
-                           posts=orm.select(p for p in Post if p.draft is False).order_by(orm.desc(Post.posted)),
+                           posts=posts, paginator=pag,
                            title=app.config["SITE_TITLE"], show_header=True, special_pages=special_pages)
 
 
@@ -196,11 +193,6 @@ def view_static_page(slug):
 
     return render_template("post.html",
                            post=post)
-
-
-@app.route("/_header.jpg", methods=["GET"])
-def header():
-    return send_file(os.path.join(os.getcwd(), "header.jpg"))
 
 
 @app.route("/_header_images", methods=["GET"])

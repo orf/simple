@@ -28,7 +28,7 @@ old_page = namedtuple("OldPost", "id title slug text draft views created_at upda
 
 
 @manager.command
-def download_latest_image(output="header.jpg"):
+def download_latest_image(output="static/header.jpg"):
     latest_headers = bing_images.get_latest_header_images()
     img = latest_headers["images"][0]
     bing_images.download_to(img["url"], output)

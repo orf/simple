@@ -6,7 +6,7 @@
     {% if show_header %}
     <div class="entry-header">
         <div class="entry-image">
-            <img src="{{ url_for('header') }}">
+            <img src="{{ url_for('static', filename='header.jpg') }}">
         </div>
 
         <div class="image-credit">
@@ -55,6 +55,28 @@
             </article><!-- /.hentry -->
             {% endfor %}
         </div>
+
+        {% if paginator %}
+            <div class="pagination">
+                {% if paginator.has_prev %}
+                    <a href="{{ request.path }}?page={{ paginator.previous }}" class="btn">Previous</a>
+                {% endif %}
+                <ul class="inline-list">
+                    {% for idx in paginator.iter_pages() %}
+                    <li>
+                        {% if idx == paginator.page %}
+                            <span class="current-page">{{ paginator.page }}</span>
+                        {% else %}
+                            <a href="{{ request.path }}?page={{ idx }}">{{ idx }}</a>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if paginator.has_next %}
+                    <a href="{{ request.path }}?page={{ paginator.next }}" class="btn">Next </a>
+                {% endif %}
+            </div>
+        {% endif %}
 
         {% block main_bottom %}{% endblock %}
     </div>
