@@ -76,14 +76,15 @@ def create():
 def nginx_config(domain_name, proxy_port="9000", use_pagespeed=False):
     """ Create a nginx config file and output it to stdout """
     try:
-        from simple import app
+        from simple.app import app
     except Exception:
         print("Error: Cannot import simple. Have you created a config file?")
         return
 
     cwd = os.getcwd()
     static_root = str(pathlib.Path.cwd() / "static")
-    result = app.app.jinja_env.get_template("nginx.jinja2").render(**locals())
+    uploads_folder = app.config["UPLOADS_FOLDER"]
+    result = app.jinja_env.get_template("nginx.jinja2").render(**locals())
     print(result)
 
 
