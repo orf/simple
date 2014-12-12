@@ -1,4 +1,6 @@
 from math import ceil
+import re
+import unicodedata
 
 
 class Pagination(object):
@@ -63,3 +65,20 @@ class iter_to_stream(object):
                 data, self.buffered = data[:size], data[size:]
             result += data
         return result
+
+
+def slugify(string):
+
+    """
+    Slugify a unicode string.
+
+    Example:
+
+        >>> slugify(u"Héllø Wörld")
+        u"hello-world"
+
+    """
+    sub = unicodedata.normalize('NFKD', string)
+    return re.sub('[-\\s]+', '-', re.sub('[^\\w\\s-]', '', sub)
+                  .strip()
+                  .lower())

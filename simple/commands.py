@@ -46,7 +46,7 @@ def create():
         if not directory.exists():
             directory.mkdir()
     print("Downloading latest header image...")
-    img = download_latest_image("header.jpg")
+    img = download_latest_image()
 
     with open("simple_settings.py", "w", encoding="utf-8") as fd:
         fd.write("# -*- coding: utf-8 -*-\n")
@@ -62,7 +62,7 @@ def create():
         fd.write("AUTHOR_NAME = ''\n")
         fd.write("AUTHOR_BIO = ''\n")
         fd.write("\n")
-        fd.write("USE_X_SENDFILE = True  # Set this to True when in production, False in development\n")
+        fd.write("USE_X_SENDFILE = False  # Leave this as False unless you know what you are doing\n")
         fd.write("CACHE_DIR = 'cache/'\n")
         fd.write("DATABASE_FILE = 'posts.db'\n")
         fd.write("SECRET_KEY = {0}\n".format(os.urandom(15)))
@@ -98,7 +98,8 @@ def fake_posts(count=10):
         return
 
     try:
-        from simple.app import orm, Post, slugify
+        from simple.app import orm, Post
+        from simple.util import slugify
     except Exception:
         print("Error: Cannot import simple. Have you created a config file?")
         return
@@ -136,7 +137,8 @@ def import_existing(database_file):
         return
 
     try:
-        from simple.app import orm, Post, slugify
+        from simple.app import orm, Post
+        from simple.util import slugify
     except Exception:
         print("Error: Cannot import simple. Have you created a config file?")
         return

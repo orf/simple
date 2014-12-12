@@ -3,8 +3,6 @@ import json
 import os
 from os import urandom
 import datetime
-import unicodedata
-import re
 from urllib import parse
 import mimetypes
 import sys
@@ -22,7 +20,7 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.contrib.cache import FileSystemCache
 
 from simple.bing_images import get_latest_header_images
-from simple.util import iter_to_stream, Pagination
+from simple.util import iter_to_stream, Pagination, slugify
 
 
 if not os.getcwd() in sys.path:
@@ -119,23 +117,6 @@ class Tag(db.Entity):
         return "<Tag {0:!r}>".format(self.name)
 
 db.generate_mapping(create_tables=True)
-
-
-def slugify(string):
-
-    """
-    Slugify a unicode string.
-
-    Example:
-
-        >>> slugify(u"Héllø Wörld")
-        u"hello-world"
-
-    """
-    sub = unicodedata.normalize('NFKD', string)
-    return re.sub('[-\\s]+', '-', re.sub('[^\\w\\s-]', '', sub)
-                  .strip()
-                  .lower())
 
 
 @app.route('/')

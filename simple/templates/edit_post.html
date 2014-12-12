@@ -89,7 +89,10 @@
 
             var updateHeader = function(idx){
                 if (idx < 0) idx = window.header_images.length - 1;
-                if (idx >= window.header_images.length) idx = 0;
+                if (idx >= window.header_images.length)
+                {
+                    // Update window.header_images then set the stuff
+                }
                 window.header_index = idx;
                 var src = window.header_images[idx].url;
                 $(".entry-image img").replaceWith($("<img src='" + src + "'/>"));
@@ -100,30 +103,33 @@
             $("#right-scroll").click(function(){ updateHeader(window.header_index+1);});
             $("#left-scroll").click(function(){ updateHeader(window.header_index-1);});
 
-            // Load the latest Bing image
-            $.get("{{ url_for('header_images') }}", function(data){
-                var header = $(".entry-image img");
-                window.header_images = data.images;
+            updateHeaderImages = function(idx, callback){
+                if (idx == null) idx = 0;
 
-                if (!header.attr("src")) {
-                    updateHeader(0);
-                } else {
-                    // A header already exists. Check to see if we have it.
-                    var src = header.attr("src");
-                    var our_headers = $.grep(window.header_images, function(obj){ return obj.url == src });
-                    if (our_headers.length > 0){
-                        window.header_index = window.header_images.indexOf(our_headers[0]);
-                    } else {
-                        // Add a new item
-                        var item = {
-                            url: src,
-                            copyright: $(".image-credit").text()
-                        };
-                        window.header_images.unshift(item);
+                $.get("{{ url_for('header_images') }}", function(data){
+                    var header = $(".entry-image img");
+                    window.header_images = data.images;
+
+                    if (!header.attr("src")) {
                         updateHeader(0);
+                    } else {
+                        // A header already exists. Check to see if we have it.
+                        var src = header.attr("src");
+                        var our_headers = $.grep(window.header_images, function(obj){ return obj.url == src });
+                        if (our_headers.length > 0){
+                            window.header_index = window.header_images.indexOf(our_headers[0]);
+                        } else {
+                            // Add a new item
+                            var item = {
+                                url: src,
+                                copyright: $(".image-credit").text()
+                            };
+                            window.header_images.unshift(item);
+                            updateHeader(0);
+                        }
                     }
-                }
-            });
+                });
+            };
 
             var saveData = function(){
                 $.post("{{ url_for('view_draft', id=post.id) }}",
