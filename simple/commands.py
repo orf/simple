@@ -83,7 +83,7 @@ def nginx_config(domain_name, proxy_port="9000", use_pagespeed=False):
 
     cwd = os.getcwd()
     static_root = str(pathlib.Path.cwd() / "static")
-    uploads_folder = app.config["UPLOADS_FOLDER"]
+    uploads_folder = app.config["UPLOAD_FOLDER"]
     result = app.jinja_env.get_template("nginx.jinja2").render(**locals())
     print(result)
 
