@@ -6,11 +6,14 @@ import pathlib
 import shutil
 
 from flask.ext.script import Manager, prompt_bool
+from flask import Flask
 import dateutil.parser
 
 import simple
 from simple import bing_images
 
+
+DEFAULT_APP = Flask("simple")
 
 try:
     from simple.app import app
@@ -19,8 +22,7 @@ except Exception:
     # that fails if there is not a simple_settings.py in the current working directory.
     # So if this fails we use a dummy app that lets us run at least deploy().
     # (we can't even run deploy() without a valid app, which we dont have until we run deploy.)
-    from flask import Flask
-    app = Flask("simple")
+    app = DEFAULT_APP
 
 manager = Manager(app=app)
 
@@ -33,6 +35,39 @@ def download_latest_image(output="static/header.jpg"):
     img = latest_headers["images"][0]
     bing_images.download_to(img["url"], output)
     return img
+
+
+@manager.command
+def update_static():
+    """ Copy new static files from Simple into this directory (after an update) """
+    cwd_static = pathlib.Path.cwd() / "static"
+
+    if not cwd_static.is_dir():
+        print("Could not find a static directory to copy into")
+        return
+
+    static_root = pathlib.Path(simple.__file__).parent / "static"
+
+    if app == DEFAULT_APP:
+        # No real app, use header.jpeg
+        header_file = cwd_static / "header.jpeg"
+    else:
+        header_file = cwd_static / app.config["SITE_HEADER"]
+
+    header_data = None
+    # Does a header image exist? (We want to preserve that)
+    if header_file.exists():
+        with header_file.open("rb") as fd:
+            header_data = fd.read()
+
+    if cwd_static.exists():
+        shutil.rmtree(str(cwd_static))
+
+    shutil.copytree(str(static_root), "static")
+
+    if header_data is not None:
+        with header_file.open("wb") as fd:
+            fd.write(header_data)
 
 
 @manager.command
@@ -51,7 +86,7 @@ def create():
     with open("simple_settings.py", "w", encoding="utf-8") as fd:
         fd.write("# -*- coding: utf-8 -*-\n")
         fd.write("SITE_TITLE = 'Simple blog'\n")
-        fd.write("SITE_HEADER = 'header.jpeg'\n")
+        fd.write("SITE_HEADER = 'header.jpg'\n")
         fd.write("SITE_HEADER_COPYRIGHT = {0}\n".format(repr(img["copyright"])))
         fd.write("BASIC_AUTH_USERNAME = ''\n")
         fd.write("BASIC_AUTH_PASSWORD = ''\n")
@@ -68,16 +103,14 @@ def create():
         fd.write("SECRET_KEY = {0}\n".format(os.urandom(15)))
 
     print("Copying static files")
-    static_root = str(pathlib.Path(simple.__file__).parent / "static")
-    shutil.copytree(static_root, "static")
+    update_static()
 
 
 @manager.command
 def nginx_config(domain_name, proxy_port="9000", use_pagespeed=False):
     """ Create a nginx config file and output it to stdout """
-    try:
-        from simple.app import app
-    except Exception:
+
+    if app == DEFAULT_APP:
         print("Error: Cannot import simple. Have you created a config file?")
         return
 
