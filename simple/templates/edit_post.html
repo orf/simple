@@ -61,11 +61,14 @@
                     <div class="header-title-wrap">
                         <h1 class="entry-title edit-title" contenteditable="True" id="title">{{ post.title if post else "Post Title" }}</h1>
                         <div class="right-img-button" id="right-scroll">
+                            <i id="right_loading" class="fa fa-circle-o-notch fa-spin fa-3x fa-inverse" style="display: none"></i>
                             <a href="#"><span class="fa fa-arrow-circle-right fa-3x fa-inverse"></span></a>
                         </div>
 
                         <div class="left-img-button" id="left-scroll">
-                            <a href="#"><span class="fa fa-arrow-circle-left fa-3x fa-inverse"></span></a>
+                            <a href="#" class="hidden">
+                                <span class="fa fa-arrow-circle-left fa-3x fa-inverse"></span>
+                            </a>
                         </div>
                     </div>
                 </header>
@@ -86,50 +89,90 @@
         $(document).ready(function() {
             window.header_images = [];
             window.header_index = 0;
+            window.got_all_images = false;
 
             var updateHeader = function(idx){
-                if (idx < 0) idx = window.header_images.length - 1;
+
+                var num = 5;
+                var btn = $(this);
+
+                var done = function(idx) {
+                    console.log("Moving to: " + idx);
+                    console.log(window.header_images);
+                    window.header_index = idx;
+                    var src = window.header_images[idx].url;
+                    $(".entry-image img").replaceWith($("<img src='" + src + "'/>"));
+                    //$(".entry-image img")[0].src = src;
+                    $(".image-credit").text(window.header_images[idx].copyright);
+
+                    $("#right_loading").attr("style", "display: none");
+                    $("#right-scroll a").show();
+
+                    if (idx == 0 && !got_all_images)
+                    {
+                        $("#left-scroll a").addClass("hidden");
+                    } else {
+                        $("#left-scroll a").removeClass("hidden");
+                    }
+                };
+
+                if (idx < 0) {
+                    if (got_all_images) idx = window.header_images.length;
+                    idx = 0;
+                }
                 if (idx >= window.header_images.length)
                 {
-                    // Update window.header_images then set the stuff
+                    if ((idx * num) > 100){
+                        got_all_images = true;
+                        idx = 0;
+                    }
+                    $("#right_loading").attr("style", "display: visible");
+                    $("#right-scroll a").hide();
+
+                    // Get some new images!
+                    return grabHeaderImages(window.header_images.length, num, function(images){
+                        console.log("Got new images:");
+                        console.log(images);
+                        images.forEach(function(v) {window.header_images.push(v)}, this);
+                        done(idx);
+                    })
                 }
-                window.header_index = idx;
-                var src = window.header_images[idx].url;
-                $(".entry-image img").replaceWith($("<img src='" + src + "'/>"));
-                //$(".entry-image img")[0].src = src;
-                $(".image-credit").text(window.header_images[idx].copyright);
+                done(idx);
             };
 
-            $("#right-scroll").click(function(){ updateHeader(window.header_index+1);});
-            $("#left-scroll").click(function(){ updateHeader(window.header_index-1);});
+            $("#right-scroll a").click(function(){ updateHeader(window.header_index+1); });
+            $("#left-scroll a").click(function(){ updateHeader(window.header_index-1);});
 
-            updateHeaderImages = function(idx, callback){
-                if (idx == null) idx = 0;
-
-                $.get("{{ url_for('header_images') }}", function(data){
-                    var header = $(".entry-image img");
-                    window.header_images = data.images;
-
-                    if (!header.attr("src")) {
-                        updateHeader(0);
-                    } else {
-                        // A header already exists. Check to see if we have it.
-                        var src = header.attr("src");
-                        var our_headers = $.grep(window.header_images, function(obj){ return obj.url == src });
-                        if (our_headers.length > 0){
-                            window.header_index = window.header_images.indexOf(our_headers[0]);
-                        } else {
-                            // Add a new item
-                            var item = {
-                                url: src,
-                                copyright: $(".image-credit").text()
-                            };
-                            window.header_images.unshift(item);
-                            updateHeader(0);
-                        }
-                    }
+            var grabHeaderImages = function(idx, num, callback){
+                $.get("{{ url_for('header_images') }}?idx=" + idx + "&num=" + num, function(data){
+                    var header_images = data.images;
+                    callback(header_images);
                 });
             };
+
+            grabHeaderImages(0, 5, function(images){
+                window.header_images = images;
+
+                var header = $(".entry-image img");
+                if (!header.attr("src")){
+                    updateHeader(0);
+                } else {
+                    var src = header.attr("src");
+                    var our_headers = $.grep(window.header_images, function(obj){ return obj.url == src });
+                    if (our_headers.length > 0){
+                        window.header_index = window.header_images.indexOf(our_headers[0]);
+                    } else {
+                        // Add a new item
+                        var item = {
+                            url: src,
+                            copyright: $(".image-credit").text()
+                        };
+                        window.header_images.unshift(item);
+                        window.header_index = 0;
+                    }
+                    updateHeader(window.header_index);
+                }
+            });
 
             var saveData = function(){
                 $.post("{{ url_for('view_draft', id=post.id) }}",

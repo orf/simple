@@ -180,10 +180,11 @@ def view_static_page(slug):
 @basic_auth.required
 def header_images():
     idx = request.args.get("idx", 0, type=int)
+    num = request.args.get("num", 5, type=int)
 
     return Response(
         json.dumps(
-            get_latest_header_images(idx)
+            get_latest_header_images(idx, num)
         ), content_type="application/json")
 
 
