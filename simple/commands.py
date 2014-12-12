@@ -97,6 +97,7 @@ def create():
         fd.write("AUTHOR_NAME = ''\n")
         fd.write("AUTHOR_BIO = ''\n")
         fd.write("\n")
+        fd.write("DEBUG = False\n  # Leave this!")
         fd.write("USE_X_SENDFILE = False  # Leave this as False unless you know what you are doing\n")
         fd.write("CACHE_DIR = 'cache/'\n")
         fd.write("DATABASE_FILE = 'posts.db'\n")

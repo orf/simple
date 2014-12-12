@@ -1,15 +1,30 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    <body id="post" class="feature">
-        <div class="entry-header">
-            <div class="entry-image">
-                <img src="{{ post.header_image or "" }}">
+    <body id="post" class="{{ 'feature' if post.header_image }}">
+
+        <div id="header_stuff">
+            <div class="entry-header {{ "hidden" if not post.header_image }}">
+                <div class="entry-image">
+                    <img src="{{ post.header_image or "" }}">
+                </div>
+
+                <div class="image-credit">
+                    {{ post.header_caption or "" }}
+                </div>
             </div>
 
-            <div class="image-credit">
-                {{ post.header_caption or "" }}
+            <div class="top-right {% if not post.header_image %}hidden{% endif %}" id="delete_header_button">
+                <a href="#">
+                    <i class="fa fa-close fa-2x fa-inverse"></i> &nbsp;
+                </a>
             </div>
+        </div>
+
+        <div class="top-right {% if post.header_image %}hidden{% endif %}" id="add_header_button">
+            <a href="#">
+                <i class="fa fa-picture-o fa-2x"></i> &nbsp;
+            </a>
         </div>
 
         <div class="sidebar-content">
@@ -60,6 +75,7 @@
                 <header class="header-title">
                     <div class="header-title-wrap">
                         <h1 class="entry-title edit-title" contenteditable="True" id="title">{{ post.title if post else "Post Title" }}</h1>
+
                         <div class="right-img-button" id="right-scroll">
                             <i id="right_loading" class="fa fa-circle-o-notch fa-spin fa-3x fa-inverse" style="display: none"></i>
                             <a href="#"><span class="fa fa-arrow-circle-right fa-3x fa-inverse"></span></a>
@@ -87,18 +103,39 @@
     <script src="{{ url_for('static', filename='js/plugins/jquery.caret-1.5.2.min.js') }}" type="text/javascript"></script>
     <script>
         $(document).ready(function() {
+            // Don't laugh at me. This code is horrible I know :(
+
+            $("#delete_header_button").click(function(){
+                $("body").removeClass("feature");
+                $("#header_stuff").hide();
+                $(".entry-header").addClass("hidden");
+                $("#right-scroll").hide();
+                $("#left-scroll").hide();
+                $("#delete_header_button").addClass("hidden");
+                $("#add_header_button").removeClass("hidden");
+            });
+
+            $("#add_header_button").click(function(){
+                $("#left-scroll").show();
+                $("#right-scroll").show();
+                $("#header_stuff").show();
+                $(".entry-header").removeClass("hidden");
+                $("body").addClass("feature");
+
+                $("#delete_header_button").removeClass("hidden");
+                $("#add_header_button").addClass("hidden");
+            });
+
             window.header_images = [];
             window.header_index = 0;
             window.got_all_images = false;
 
             var updateHeader = function(idx){
-
                 var num = 5;
-                var btn = $(this);
 
                 var done = function(idx) {
-                    console.log("Moving to: " + idx);
-                    console.log(window.header_images);
+                    //console.log("Moving to: " + idx);
+                    //console.log(window.header_images);
                     window.header_index = idx;
                     var src = window.header_images[idx].url;
                     $(".entry-image img").replaceWith($("<img src='" + src + "'/>"));
@@ -108,8 +145,7 @@
                     $("#right_loading").attr("style", "display: none");
                     $("#right-scroll a").show();
 
-                    if (idx == 0 && !got_all_images)
-                    {
+                    if (idx == 0 && !window.got_all_images){
                         $("#left-scroll a").addClass("hidden");
                     } else {
                         $("#left-scroll a").removeClass("hidden");
@@ -117,13 +153,13 @@
                 };
 
                 if (idx < 0) {
-                    if (got_all_images) idx = window.header_images.length;
+                    if (window.got_all_images) idx = window.header_images.length;
                     idx = 0;
                 }
                 if (idx >= window.header_images.length)
                 {
                     if ((idx * num) > 100){
-                        got_all_images = true;
+                        window.got_all_images = true;
                         idx = 0;
                     }
                     $("#right_loading").attr("style", "display: visible");
@@ -131,8 +167,8 @@
 
                     // Get some new images!
                     return grabHeaderImages(window.header_images.length, num, function(images){
-                        console.log("Got new images:");
-                        console.log(images);
+                        //console.log("Got new images:");
+                       // console.log(images);
                         images.forEach(function(v) {window.header_images.push(v)}, this);
                         done(idx);
                     })
@@ -175,13 +211,21 @@
             });
 
             var saveData = function(){
+                var img = null;
+                var caption = null;
+
+                if ($(".entry-image img").is(":visible")){
+                    img = $(".entry-image img").attr("src");
+                    caption = $(".image-credit").text()
+                }
+
                 $.post("{{ url_for('view_draft', id=post.id) }}",
                         {
                             _csrf_token: '{{ csrf_token() }}',
                             title: $('#title').text(),
                             content: $('#content').val(),
-                            header_image: $(".entry-image img").attr("src"),
-                            header_caption: $(".image-credit").text()
+                            header_image: img,
+                            header_caption: caption,
                         });
                 return false;
             };

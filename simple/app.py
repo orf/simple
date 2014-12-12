@@ -30,7 +30,10 @@ app = Flask(__name__)
 
 app.config.from_object("simple_settings")
 app.secret_key = app.config["SECRET_KEY"]
-app.static_folder = os.path.join(os.getcwd(), "static")
+
+if not app.config["DEBUG"]:
+    app.static_folder = os.path.join(os.getcwd(), "static")
+
 db = orm.Database('sqlite',
                   os.path.join(os.getcwd(), app.config["DATABASE_FILE"]), create_db=True)
 cache = FileSystemCache(app.config["CACHE_DIR"])
