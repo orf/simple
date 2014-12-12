@@ -5,7 +5,9 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>
+        {% block page_title %}{{ config["SITE_TITLE"] }}{% endblock %}
+    </title>
 
     <!-- For all browsers -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">

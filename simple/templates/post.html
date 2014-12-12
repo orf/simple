@@ -1,5 +1,9 @@
 {% extends "layout.html" %}
 
+{% block page_title %}
+    {{ post.title }} | {{ super() }}
+{% endblock %}
+
 {% block body %}
 
     <body id="post" {% if post.header_image %}class="feature"{% endif %}>
@@ -61,7 +65,30 @@
                         </div>
                     </footer>
                 </div>
+                {% if config.DISQUS_SHORTNAME and post.published %}
+                <div class="entry-content" id="disqus_thread">
+
+                </div>
+                {% endif %}
             </article>
         </div>
     </body>
+{% endblock %}
+
+
+{% block extra_scripts %}
+    {% if config.DISQUS_SHORTNAME and post.published %}
+        <script type="text/javascript">
+            var disqus_shortname = '{{ config.DISQUS_SHORTNAME }}';
+            var disqus_identifier = '{{ post.id }}';
+            var disqus_url = '{{ url_for('view_post', post_id=post.id, _external=True) }}';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+    {% endif %}
 {% endblock %}
