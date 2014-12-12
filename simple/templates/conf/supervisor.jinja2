@@ -1,0 +1,10 @@
+[program:simple]
+command={{ virtualenv_path }}/bin/gunicorn simple.app:app --log-file={{ appdir }}logs/gunicorn.log --bind 127.0.0.1:{{ proxy_port }}
+directory={{ appdir }}
+environment=PATH="{{ virtualenv_path }}/bin"
+user=nobody
+autostart=true
+autorestart=true
+killasgroup = true
+redirect_stdout=true
+redirect_stderr=true

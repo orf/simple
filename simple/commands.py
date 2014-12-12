@@ -122,6 +122,16 @@ def nginx_config(domain_name, proxy_port="9000", use_pagespeed=False):
 
 
 @manager.command
+def supervisor_config(virtualenv_path, proxy_port):
+    if app == DEFAULT_APP:
+        print("Cannot import simple. Have you created a config file?")
+        return
+
+    appdir = os.getcwd()
+    result = app.jinja_env.get_template("supervisor.jinja2").render(**locals())
+    print(result)
+
+@manager.command
 def fake_posts(count=10):
     """ Create an empty database and fill it with fake posts """
     try:
