@@ -8,7 +8,7 @@ setup(
     license='MIT',
     author='Orf',
     author_email='tom@tomforb.es',
-    description='',
+    description='A simple markdown based blog.',
     include_package_data=True,
     install_requires=["flask", "flask_seasurf", "pony", "markdown", "python_dateutil",
               "flask_basicauth", 'requests', 'flask_script'],

@@ -13,7 +13,7 @@ server {
     error_log {{ cwd }}/logs/error.log;
 
     location /static/ {
-            alias {{ static_root }};
+            alias {{ static_root }}/;
             gzip on;
             gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript text/x-js;
             gzip_comp_level 9;
@@ -22,7 +22,7 @@ server {
     }
 
     location /uploads/ {
-            alias {{ uploads_folder }};
+            alias {{ uploads_folder }}/;
             gzip on;
             gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript text/x-js;
             gzip_comp_level 9;
