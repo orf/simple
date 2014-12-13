@@ -13,7 +13,7 @@
             Image source: {{ config.SITE_HEADER_COPYRIGHT }}
         </div>
     </div>
-    {% include "nav.jinja2" %}
+    {% include "includes/nav.html" %}
     {% endif %}
 
     <header class="header-title">
@@ -24,7 +24,10 @@
         </div>
     </header>
 
+    {% block inner_body %}{% endblock %}
+
     <div id="main" role="main">
+        {% block main %}
         <div id="items">
             {% for post in posts %}
             <article class="hentry" data-published="{{ not post.draft }}">
@@ -55,6 +58,7 @@
             </article><!-- /.hentry -->
             {% endfor %}
         </div>
+        {% endblock %}
 
         {% if paginator %}
             <div class="pagination">

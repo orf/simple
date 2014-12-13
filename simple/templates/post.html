@@ -7,7 +7,7 @@
 {% block body %}
 
     <body id="post" {% if post.header_image %}class="feature"{% endif %}>
-        {% include "nav.jinja2" %}
+        {% include "includes/nav.html" %}
 
         {% if post.header_image %}
         <div class="entry-header">

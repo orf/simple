@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+{% from "includes/auth.html" import auth_scripts, auth_logout %}
+
+{% block extra_scripts %}
+    {{ auth_scripts() }}
+{% endblock %}
+
+{% block inner_body %}
+    {% if g.user == config['PERSONA_EMAIL'] %}
+        {{ auth_logout() }}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <header>
+      <div class="login-container">
+        {% if not g.user %}
+            <a class="btn login-btn" href="#">
+                <i class="fa fa-user fa-inverse"></i> Login
+            </a>
+        {% elif g.user != config['PERSONA_EMAIL'] %}
+            <p>
+                You shouldn't be here. Turn back now.
+            </p>
+            <p>
+                <a href="#" class="signout">Sign out</a>
+            </p>
+        {% else %}
+            <a class="btn login-btn">Drafts</a>
+        {% endif %}
+      </div>
+    </header>
+{% endblock %}

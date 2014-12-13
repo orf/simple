@@ -1,4 +1,9 @@
 {% extends "index.html" %}
+{% from "includes/auth.html" import auth_scripts, auth_logout %}
+
+{% block inner_body %}
+    {{ auth_logout() }}
+{% endblock %}
 
 {% block entry_meta %}
     <span>
@@ -58,7 +63,7 @@
     <script src="{{ url_for('static', filename='js/plugins/jquery.contenteditable.js') }}" type="text/javascript"></script>
     <script src="{{ url_for('static', filename='js/plugins/jquery.hotkeys.js') }}" type="text/javascript"></script>
     <script src="{{ url_for('static', filename='js/plugins/jquery.caret-1.5.2.min.js') }}" type="text/javascript"></script>
-
+    {{ auth_scripts() }}
     <script>
         $(document).ready(function(){
             $("article[data-published='True']").hide();

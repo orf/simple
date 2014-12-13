@@ -1,0 +1,16 @@
+{% macro auth_scripts() %}
+    <script>
+        var $URL_ROOT = {{ request.url_root|tojson }};
+        var $CURRENT_USER = {{ g.user|tojson }};
+        var $CSRF = "{{ csrf_token() }}";
+        var $SITENAME = "{{ config['SITE_TITLE'] }}"
+    </script>
+    <script src="{{ config.PERSONA_JS }}"></script>
+    <script src="{{ url_for('static', filename='js/persona.js') }}"></script>
+{% endmacro %}
+
+{% macro auth_logout() %}
+    <a class="logout-button btn" href="#">
+        <i class="fa fa-lock fa-inverse"></i> Logout
+    </a>
+{% endmacro %}

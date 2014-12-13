@@ -1,4 +1,5 @@
 from base64 import b32encode
+import functools
 import json
 import os
 from os import urandom
@@ -8,7 +9,7 @@ import mimetypes
 import sys
 
 from flask import Flask, render_template, abort, request, Response, redirect, url_for, send_from_directory, \
-    make_response
+    make_response, session, g
 from flask.ext.basicauth import BasicAuth
 from werkzeug.utils import secure_filename
 from flask_seasurf import SeaSurf
@@ -27,7 +28,10 @@ if not os.getcwd() in sys.path:
     sys.path.append(os.getcwd())
 
 app = Flask(__name__)
-
+app.config.update(
+    PERSONA_JS='https://login.persona.org/include.js',
+    PERSONA_VERIFIER='https://verifier.login.persona.org/verify'
+    )
 app.config.from_object("simple_settings")
 app.secret_key = app.config["SECRET_KEY"]
 
@@ -122,6 +126,18 @@ class Tag(db.Entity):
 db.generate_mapping(create_tables=True)
 
 
+def requires_auth(func):
+    @functools.wraps(func)
+    def _wrapper(*args, **kwargs):
+        email = session.get('email')
+        if email is None or email != app.config["PERSONA_EMAIL"]:
+            return redirect(url_for("login_page"))
+
+        return func(*args, **kwargs)
+
+    return _wrapper
+
+
 @app.route('/')
 @orm.db_session
 def index():
@@ -143,7 +159,7 @@ def index():
 
 
 @app.route('/_posts/')
-@basic_auth.required
+@requires_auth
 @orm.db_session
 def list_posts():
     return render_template("drafts.html",
@@ -180,7 +196,7 @@ def view_static_page(slug):
 
 
 @app.route("/_header_images", methods=["GET"])
-@basic_auth.required
+@requires_auth
 def header_images():
     idx = request.args.get("idx", 0, type=int)
     num = request.args.get("num", 5, type=int)
@@ -192,7 +208,7 @@ def header_images():
 
 
 @app.route("/_new", methods=["POST"])
-@basic_auth.required
+@requires_auth
 @orm.db_session
 def new_post():
     p = Post(
@@ -219,7 +235,7 @@ def new_post():
 
 
 @app.route("/_preview/<int:id>", methods=["GET"])
-@basic_auth.required
+@requires_auth
 @orm.db_session
 def preview_post(id):
     post = orm.select(p for p in Post if p.id == id and p.draft is True).get()
@@ -232,7 +248,7 @@ def preview_post(id):
 
 
 @app.route("/_delete/<int:id>", methods=["POST"])
-@basic_auth.required
+@requires_auth
 @orm.db_session
 def delete_post(id):
     post = orm.select(p for p in Post if p.id == id).get()
@@ -246,7 +262,7 @@ def delete_post(id):
 
 
 @app.route("/_publish/<int:id>", methods=["POST"])
-@basic_auth.required
+@requires_auth
 @orm.db_session
 def publish_post(id):
     post = orm.select(p for p in Post if p.id == id).get()
@@ -268,7 +284,7 @@ def publish_post(id):
 
 
 @app.route("/_edit/<int:id>", methods=["POST", "GET"])
-@basic_auth.required
+@requires_auth
 @orm.db_session
 def view_draft(id):
     post = orm.select(p for p in Post if p.id == id).get()
@@ -316,7 +332,7 @@ def uploads(filename):
 
 
 @app.route("/_upload", methods=["POST"])
-@basic_auth.required
+@requires_auth
 def upload_file():
     file_upload = request.files['file']
     if file_upload and allowed_file(file_upload.filename):
@@ -343,6 +359,51 @@ def feed():
     response = make_response(rendered)
     response.mimetype = "application/xml"
     return response
+
+
+@app.before_request
+def get_current_user():
+    g.user = None
+    email = session.get('email')
+    if email is not None:
+        g.user = email
+
+
+@app.route('/_login', methods=["GET"])
+def login_page():
+    email = g.user
+    if email == app.config["PERSONA_EMAIL"]:
+        return redirect(url_for("list_posts"))
+
+    return render_template("login.html", title="Welcome")
+
+
+@app.route('/_auth/login', methods=['GET', 'POST'])
+def login_handler():
+    """This is used by the persona.js file to kick off the
+    verification securely from the server side.  If all is okay
+    the email address is remembered on the server.
+    """
+    resp = requests.post(app.config['PERSONA_VERIFIER'], data={
+        'assertion': request.form['assertion'],
+        'audience': request.host_url,
+    }, verify=True)
+    if resp.ok:
+        verification_data = resp.json()
+        if verification_data['status'] == 'okay':
+            session['email'] = verification_data['email']
+            return 'OK'
+
+    abort(400)
+
+
+@app.route('/_auth/logout', methods=['POST'])
+def logout_handler():
+    """This is what persona.js will call to sign the user
+    out again.
+    """
+    session.clear()
+    return 'OK'
 
 
 
