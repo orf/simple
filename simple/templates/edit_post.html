@@ -153,8 +153,12 @@
                 };
 
                 if (idx < 0) {
-                    if (window.got_all_images) idx = window.header_images.length;
-                    idx = 0;
+                    if (window.got_all_images){
+                        idx = window.header_images.length - 1;
+                    }
+                    else {
+                        idx = 0;
+                    }
                 }
                 if (idx >= window.header_images.length)
                 {
