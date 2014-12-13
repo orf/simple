@@ -122,12 +122,13 @@ def nginx_config(domain_name, proxy_port="9000", use_pagespeed=False):
 
 
 @manager.command
-def supervisor_config(virtualenv_path, proxy_port):
+def supervisor_config(virtualenv_path, proxy_port, workers=2):
     if app == DEFAULT_APP:
         print("Cannot import simple. Have you created a config file?")
         return
 
     appdir = os.getcwd()
+    virtualenv_path = str(pathlib.Path(virtualenv_path).resolve())
     result = app.jinja_env.get_template("supervisor.jinja2").render(**locals())
     print(result)
 

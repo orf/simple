@@ -2,7 +2,6 @@ import requests
 
 
 def get_latest_header_images(idx=0, num=5):
-    print("http://www.bing.com/HPImageArchive.aspx?format=js&n={0}&idx={1}".format(num, idx))
     resp = requests.get("http://www.bing.com/HPImageArchive.aspx?format=js&n=5&idx={0}".format(idx)).json()
     return {
         "images": [
