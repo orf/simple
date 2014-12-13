@@ -368,7 +368,7 @@ def get_current_user():
     if email is not None:
         g.user = email
 
-
+# Shamefully all stolen from the flask persona example.
 @app.route('/_login', methods=["GET"])
 def login_page():
     email = g.user
@@ -404,7 +404,6 @@ def logout_handler():
     """
     session.clear()
     return 'OK'
-
 
 
 if __name__ == '__main__':
