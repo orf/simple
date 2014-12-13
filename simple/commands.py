@@ -77,10 +77,11 @@ def create():
     print("Creating skeleton files in {0}".format(os.getcwd()))
     pathlib.Path("__init__.py").touch()
 
-    for name in ("uploads", "cache", "logs"):
+    for name in ("uploads", "cache", "logs", "static"):
         directory = pathlib.Path(name)
         if not directory.exists():
             directory.mkdir()
+
     print("Downloading latest header image...")
     img = download_latest_image()
 
@@ -120,7 +121,7 @@ def nginx_config(domain_name, proxy_port="9000", use_pagespeed=False):
     cwd = os.getcwd()
     static_root = str(pathlib.Path.cwd() / "static")
     uploads_folder = app.config["UPLOAD_FOLDER"]
-    result = app.jinja_env.get_template("nginx.jinja2").render(**locals())
+    result = app.jinja_env.get_template("conf/nginx.jinja2").render(**locals())
     print(result)
 
 
@@ -132,7 +133,7 @@ def supervisor_config(virtualenv_path, proxy_port, workers=2):
 
     appdir = os.getcwd()
     virtualenv_path = str(pathlib.Path(virtualenv_path).resolve())
-    result = app.jinja_env.get_template("supervisor.jinja2").render(**locals())
+    result = app.jinja_env.get_template("conf/supervisor.jinja2").render(**locals())
     print(result)
 
 @manager.command
