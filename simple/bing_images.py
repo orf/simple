@@ -3,6 +3,10 @@ import requests
 
 def get_latest_header_images(idx=0, num=5):
     resp = requests.get("http://www.bing.com/HPImageArchive.aspx?format=js&n=5&idx={0}".format(idx)).json()
+    
+    if resp is None:
+        return {}
+
     return {
         "images": [
             {"url": "http://bing.com" + item["url"], "copyright": item["copyright"]} for item in resp["images"]

@@ -57,6 +57,7 @@ def update_static():
     header_data = None
     # Does a header image exist? (We want to preserve that)
     if header_file.exists():
+        print("Found existing header file, preserving")
         with header_file.open("rb") as fd:
             header_data = fd.read()
 
