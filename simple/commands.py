@@ -89,6 +89,8 @@ def create():
         fd.write("SITE_HEADER = 'header.jpg'\n")
         fd.write("SITE_HEADER_COPYRIGHT = {0}\n".format(repr(img["copyright"])))
         fd.write("PERSONA_EMAIL = ''\n")
+        fd.write("GOOGLE_ANALYTICS_ID = ''\n")
+        fd.write("DISQUS_SHORTNAME = ''\n")
         fd.write("\n")
         fd.write("# Contact data:\n")
         fd.write("GITHUB_USERNAME = ''\n")
