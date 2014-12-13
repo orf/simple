@@ -2,9 +2,9 @@ from setuptools import setup
 
 setup(
     name='simpleblogging',
-    version='2',
+    version='2.0.1',
     packages=['simple'],
-    url='github.com/orf/simple',
+    url='http://github.com/orf/simple',
     license='MIT',
     author='Orf',
     author_email='tom@tomforb.es',
