@@ -1,11 +1,11 @@
 from setuptools import setup
 
 setup(
-    name='simple',
+    name='simpleblogging',
     version='2',
     packages=['simple'],
-    url='',
-    license='',
+    url='github.com/orf/simple',
+    license='MIT',
     author='Orf',
     author_email='tom@tomforb.es',
     description='',
@@ -14,5 +14,8 @@ setup(
               "flask_basicauth", 'requests', 'flask_script'],
     entry_points={
         'console_scripts': ['simple=simple.commands:main']
-    }
+    },
+    classifiers=[
+        "License :: OSI Approved :: MIT License"
+    ]
 )
