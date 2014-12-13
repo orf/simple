@@ -161,6 +161,7 @@
                     if ((idx * num) >= 100){
                         window.got_all_images = true;
                         idx = 0;
+                        return done(idx);
                     }
                     $("#right_loading").attr("style", "display: visible");
                     $("#right-scroll a").hide();
@@ -173,7 +174,7 @@
                         done(idx);
                     })
                 }
-                done(idx);
+                return done(idx);
             };
 
             $("#right-scroll a").click(function(){ updateHeader(window.header_index+1); });
