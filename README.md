@@ -1,7 +1,9 @@
 Simple
 ======
 
-# Quickstart:
+![](http://tomforb.es/uploads/editor_VAX22JW3.png)
+
+## Quickstart:
 
     >> mkdir blog && cd blog
     >> virtualenv env
@@ -10,4 +12,4 @@ Simple
     >> simple nginx_config yoursite.com --proxy-port=9009 > /etc/nginx/conf.d/simple.conf
     >> simple supervisor_config env/ 9009 >> /etc/supervisord.conf
     >> chown -R nobody:nobody ../blog
-    >> supervisorctl start simple && service nginx reload
+    >> supervisorctl start simple && service nginx reload   

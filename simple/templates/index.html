@@ -68,9 +68,9 @@
 
         {% if paginator %}
             <div class="pagination">
-                {% if paginator.has_prev %}
-                    <a href="{{ request.path }}?page={{ paginator.previous }}" class="btn">Previous</a>
-                {% endif %}
+                <a href="{{ request.path }}?page={{ paginator.previous }}"
+                   class="btn {% if not paginator.has_prev %}hidden{% endif %}">Previous</a>
+
                 <ul class="inline-list">
                     {% for idx in paginator.iter_pages() %}
                     <li>
@@ -82,9 +82,10 @@
                     </li>
                     {% endfor %}
                 </ul>
-                {% if paginator.has_next %}
-                    <a href="{{ request.path }}?page={{ paginator.next }}" class="btn">Next </a>
-                {% endif %}
+
+                <a href="{{ request.path }}?page={{ paginator.next }}"
+                   class="btn {% if not paginator.has_next %}hidden{% endif %}">Next </a>
+
             </div>
         {% endif %}
 

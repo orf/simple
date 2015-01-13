@@ -8,6 +8,7 @@ import shutil
 from flask.ext.script import Manager, prompt_bool
 from flask import Flask
 import dateutil.parser
+import time
 
 import simple
 from simple import bing_images
@@ -137,13 +138,14 @@ def supervisor_config(virtualenv_path, proxy_port, workers=2):
     print(result)
 
 @manager.command
+@manager.option("-c", "--count", dest="count")
 def fake_posts(count=10):
     """ Create an empty database and fill it with fake posts """
     try:
         from faker import Faker
         fake = Faker()
     except ImportError:
-        print("Error: python-faker is not installed. Cannot create fake data")
+        print("Error: module fake-factory is not installed. Cannot create fake data")
         return
 
     try:
@@ -152,6 +154,8 @@ def fake_posts(count=10):
     except Exception:
         print("Error: Cannot import simple. Have you created a config file?")
         return
+
+    start_time = time.time()
 
     with orm.db_session():
         if orm.select(p for p in Post).count() == 0:
@@ -175,6 +179,7 @@ def fake_posts(count=10):
                 )
             orm.commit()
 
+    print("Created {0} posts in {1}".format(count, time.time()-start_time))
 
 @manager.command
 def import_existing(database_file):
