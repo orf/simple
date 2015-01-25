@@ -112,8 +112,7 @@ def create():
 
 
 @manager.command
-@manager.option("-p", "--proxy-port", dest="proxy_port", default="9000")
-def nginx_config(domain_name, use_pagespeed=False):
+def nginx_config(domain_name, proxy_port="9000", use_pagespeed=False):
     """ Create a nginx config file and output it to stdout """
 
     if app == DEFAULT_APP:
