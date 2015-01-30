@@ -18,6 +18,7 @@ You need Python 3.4, and simply follow the commands below:
     >> source env/bin/activate && pip install simpleblogging gunicorn
     >> simple create
     >> nano simple_config.py
+    >> # Ubuntu users may need to change the config path to /etc/nginx/sites-available/
     >> simple nginx_config yoursite.com --proxy_port=9009 > /etc/nginx/conf.d/simple.conf
     >> simple supervisor_config env/ 9009 >> /etc/supervisord.conf
     >> chown -R nobody:nobody ../blog

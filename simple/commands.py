@@ -91,7 +91,7 @@ def create():
         fd.write("SITE_TITLE = 'Simple blog'\n")
         fd.write("SITE_HEADER = 'header.jpg'\n")
         fd.write("SITE_HEADER_COPYRIGHT = {0}\n".format(repr(img["copyright"])))
-        fd.write("PERSONA_EMAIL = ''\n")
+        fd.write("PERSONA_EMAIL = ''  # Used to login to persona\n")
         fd.write("GOOGLE_ANALYTICS_ID = ''\n")
         fd.write("DISQUS_SHORTNAME = ''\n")
         fd.write("\n")
@@ -109,6 +109,7 @@ def create():
 
     print("Copying static files")
     update_static()
+    print("Done! Go to /_posts/ to create a new post!")
 
 
 @manager.command
