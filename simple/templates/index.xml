@@ -3,7 +3,7 @@
     <channel>
         <title>{{ config.SITE_TITLE }}</title>
         <description>{{ config.SITE_TAGLINE }}</description>
-        <link>{{ config.SITE_URL }}</link>
+        <link>{{ request.url_route }}</link>
         {% for post in posts %}
         {% set p_url=url_for('view_post', slug=post.slug, _external=True) %}
         <item>
