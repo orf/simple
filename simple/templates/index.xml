@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
     <channel>
-        <title>{{ config.BLOG_TITLE }}</title>
-        <description>{{ config.BLOG_TAGLINE }}</description>
-        <link>{{ config.BLOG_URL }}</link>
+        <title>{{ config.SITE_TITLE }}</title>
+        <description>{{ config.SITE_TAGLINE }}</description>
+        <link>{{ config.SITE_URL }}</link>
         {% for post in posts %}
         {% set p_url=url_for('view_post', slug=post.slug, _external=True) %}
         <item>
