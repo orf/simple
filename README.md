@@ -1,6 +1,6 @@
 Simple
 ======
-Simple is as a Python-powered markdown blog. You can see an example running [on my blog](http://tomforb.es/). The editor is an expanding textarea and you can upload images by dragging and dropping them onto the page:
+Simple is as a Python-powered markdown blog. You can see an example running [on my blog](http://tomforb.es/). The editor is an expanding textarea and you can upload images by dragging and dropping them onto the page, and ctrl+s saves the post.
 
 ![Editor](http://tomforb.es/uploads/editor_VAX22JW3.png)
 
