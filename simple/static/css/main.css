@@ -900,6 +900,10 @@ ol.CodeRay li {
   display: none;
   visibility: hidden;
 }
+.hide-important {
+  display: none !important;
+  visibility: hidden;
+}
 .visuallyhidden.focusable:active,
 .visuallyhidden.focusable:focus {
   position: static;

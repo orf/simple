@@ -4,14 +4,10 @@
     <body id="post" class="{{ 'feature' if post.header_image }}">
 
         <div id="header_stuff">
-            <div class="entry-header {{ "hidden" if not post.header_image }}">
-                <div class="entry-image">
-                    <img src="{{ post.header_image or "" }}">
-                </div>
 
-                <div class="image-credit">
-                    {{ post.header_caption or "" }}
-                </div>
+            <div class="page-header {{ "hide-important" if not post.header_image }}"
+                 {% if post.header_image %}style="background: url({{ post.header_image }}) 50%">{% endif %}>
+                <p id="image_credit">Image source: {{ post.header_caption or "" }}</p>
             </div>
 
             <div class="top-right {% if not post.header_image %}hidden{% endif %}" id="delete_header_button">
@@ -77,12 +73,11 @@
                         <h1 class="entry-title edit-title" contenteditable="True" id="title">{{ post.title if post else "Post Title" }}</h1>
 
                         <div class="right-img-button" id="right-scroll">
-                            <i id="right_loading" class="fa fa-circle-o-notch fa-spin fa-3x fa-inverse" style="display: none"></i>
                             <a href="#"><span class="fa fa-arrow-circle-right fa-3x fa-inverse"></span></a>
                         </div>
 
                         <div class="left-img-button" id="left-scroll">
-                            <a href="#" class="hidden">
+                            <a href="#">
                                 <span class="fa fa-arrow-circle-left fa-3x fa-inverse"></span>
                             </a>
                         </div>
@@ -108,7 +103,7 @@
             $("#delete_header_button").click(function(){
                 $("body").removeClass("feature");
                 $("#header_stuff").hide();
-                $(".entry-header").addClass("hidden");
+                $(".page-header").addClass("hide-important");
                 $("#right-scroll").hide();
                 $("#left-scroll").hide();
                 $("#delete_header_button").addClass("hidden");
@@ -119,7 +114,7 @@
                 $("#left-scroll").show();
                 $("#right-scroll").show();
                 $("#header_stuff").show();
-                $(".entry-header").removeClass("hidden");
+                $(".page-header").removeClass("hide-important");
                 $("body").addClass("feature");
 
                 $("#delete_header_button").removeClass("hidden");
@@ -128,77 +123,41 @@
 
             window.header_images = [];
             window.header_index = 0;
-            window.got_all_images = false;
 
             var updateHeader = function(idx){
-                var num = 3;
-
-                var done = function(idx) {
-                    //console.log("Moving to: " + idx);
-                    //console.log(window.header_images);
-                    window.header_index = idx;
-                    var src = window.header_images[idx].url;
-                    $(".entry-image img").replaceWith($("<img src='" + src + "'/>"));
-                    //$(".entry-image img")[0].src = src;
-                    $(".image-credit").text(window.header_images[idx].copyright);
-
-                    $("#right_loading").attr("style", "display: none");
-                    $("#right-scroll a").show();
-
-                    if (idx == 0 && !window.got_all_images){
-                        $("#left-scroll a").addClass("hidden");
-                    } else {
-                        $("#left-scroll a").removeClass("hidden");
-                    }
-                };
-
                 if (idx < 0) {
-                    if (window.got_all_images){
-                        idx = window.header_images.length - 1;
-                    }
-                    else {
-                        idx = 0;
-                    }
+                    idx = window.header_images.length - 1;
+                } else if (idx >= window.header_images.length) {
+                    idx = 0;
                 }
-                if (idx >= window.header_images.length)
-                {
-                    if ((idx * num) >= 100){
-                        window.got_all_images = true;
-                        idx = 0;
-                        return done(idx);
-                    }
-                    $("#right_loading").attr("style", "display: visible");
-                    $("#right-scroll a").hide();
 
-                    // Get some new images!
-                    return grabHeaderImages(window.header_images.length, num, function(images){
-                        //console.log("Got new images:");
-                       // console.log(images);
-                        images.forEach(function(v) {window.header_images.push(v)}, this);
-                        done(idx);
-                    })
-                }
-                return done(idx);
+                window.header_index = idx;
+                var src = window.header_images[idx].url;
+                $(".page-header").css("background", "url(" + src + ") 50%");
+
+                //$(".entry-image img").replaceWith($("<img src='" + src + "'/>"));
+                $("#image_credit").text(window.header_images[idx].copyright);
+
+                $("#right-scroll a").show();
             };
 
             $("#right-scroll a").click(function(){ updateHeader(window.header_index+1); });
             $("#left-scroll a").click(function(){ updateHeader(window.header_index-1);});
 
-            var grabHeaderImages = function(idx, num, callback){
-                $.get("{{ url_for('header_images') }}?idx=" + idx + "&num=" + num, function(data){
-                    var header_images = data.images;
-                    callback(header_images);
-                });
+            var grabHeaderImages = function(callback){
+                $.get("{{ url_for('header_images') }}", callback);
             };
 
-            grabHeaderImages(0, 5, function(images){
+            grabHeaderImages(function(images){
                 window.header_images = images;
 
-                var header = $(".entry-image img");
-                if (!header.attr("src")){
+                var header = $(".page-header");
+                if (header.css("background-image") == "none"){
                     updateHeader(0);
                 } else {
-                    var src = header.attr("src");
+                    var bg = header.css("background-image");
+                    var src = bg.replace("url(", "").replace(")", "");
+                    //var src = header.attr("src");
                     var our_headers = $.grep(window.header_images, function(obj){ return obj.url == src });
                     if (our_headers.length > 0){
                         window.header_index = window.header_images.indexOf(our_headers[0]);
@@ -206,7 +165,7 @@
                         // Add a new item
                         var item = {
                             url: src,
-                            copyright: $(".image-credit").text()
+                            copyright: $("#image_credit").text()
                         };
                         window.header_images.unshift(item);
                         window.header_index = 0;
@@ -218,10 +177,12 @@
             var saveData = function(){
                 var img = null;
                 var caption = null;
+                var header = $(".page-header");
 
-                if ($(".entry-image img").is(":visible")){
-                    img = $(".entry-image img").attr("src");
-                    caption = $(".image-credit").text()
+                if (header.is(":visible")){
+                    var bg = header.css("background-image");
+                    img = bg.replace("url(", "").replace(")", "");
+                    caption = $("#image_credit").text()
                 }
 
                 $.post("{{ url_for('view_draft', id=post.id) }}",

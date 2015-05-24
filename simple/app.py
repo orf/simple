@@ -198,12 +198,16 @@ def view_static_page(slug):
 @app.route("/_header_images", methods=["GET"])
 @requires_auth
 def header_images():
-    idx = request.args.get("idx", 0, type=int)
-    num = request.args.get("num", 5, type=int)
+    # Can only retrieve 19 images, 5 at a max time.
+    images = []
+    images.extend(get_latest_header_images(0)["images"])
+    images.extend(get_latest_header_images(5)["images"])
+    images.extend(get_latest_header_images(10)["images"])
+    images.extend(get_latest_header_images(15, num=4)["images"])
 
     return Response(
         json.dumps(
-            get_latest_header_images(idx, num)
+            images
         ), content_type="application/json")
 
 
