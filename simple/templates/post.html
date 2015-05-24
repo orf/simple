@@ -10,15 +10,10 @@
         {% include "includes/nav.html" %}
 
         {% if post.header_image %}
-        <div class="entry-header">
-            <div class="entry-image">
-                <img src="{{ post.header_image }}">
-            </div>
 
-            <div class="image-credit">
-                Image source: {{ post.header_caption }}
+            <div class="page-header" style="background: url({{ post.header_image }}) 50%">
+                <p>Image source: {{ post.header_caption }}</p>
             </div>
-        </div>
         {% endif %}
 
         <div id="main" role="main">

@@ -4,16 +4,10 @@
 <body id="post-index"{% if show_header %} class="feature"{% endif %}>
 
     {% if show_header %}
-    <div class="entry-header">
-        <div class="entry-image">
-            <img src="{{ url_for('static', filename=config["SITE_HEADER"]) }}">
+        <div class="page-header" style="background: url({{ url_for('static', filename=config["SITE_HEADER"])}}) 50%">
+            <p>Image source: {{ config.SITE_HEADER_COPYRIGHT }}</p>
         </div>
-
-        <div class="image-credit">
-            Image source: {{ config.SITE_HEADER_COPYRIGHT }}
-        </div>
-    </div>
-    {% include "includes/nav.html" %}
+        {% include "includes/nav.html" %}
     {% endif %}
 
     <header class="header-title">

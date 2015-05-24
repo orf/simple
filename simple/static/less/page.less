@@ -101,6 +101,44 @@ body {
 		color: @white;
 	}
 }
+
+
+.page-header {
+  min-height: 400px;
+  height: 200%;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.page-header > p {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+
+  padding: 10px 15px;
+	background-color: fade(@base-color,50);
+	color: @white;
+	.font-rem(12);
+	text-align: right;
+	.border-radius(3px,0,0,3px);
+	z-index: 10;
+	@media @medium {
+		max-width: 760px;
+	}
+	@media @large {
+		max-width: 960px;
+	}
+	a {
+		color: @white;
+		text-decoration: none;
+	}
+
+}
+
 .entry-image {
 	position: relative;
 	top: -50%; 

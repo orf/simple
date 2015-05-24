@@ -4094,6 +4094,57 @@ body {
 .feature .header-title p {
   color: #ffffff;
 }
+.page-header {
+  min-height: 400px;
+  height: 200%;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.page-header > p {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  padding: 10px 15px;
+  background-color: rgba(34, 34, 34, 0.5);
+  color: #ffffff;
+  font-size: 12px;
+  font-size: 0.75rem;
+  text-align: right;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-topleft: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 3px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  z-index: 10;
+}
+@media only screen and (min-width: 48em) {
+  .page-header > p {
+    max-width: 760px;
+  }
+}
+@media only screen and (min-width: 62.5em) {
+  .page-header > p {
+    max-width: 960px;
+  }
+}
+.page-header > p a {
+  color: #ffffff;
+  text-decoration: none;
+}
 .entry-image {
   position: relative;
   top: -50%;

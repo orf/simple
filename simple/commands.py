@@ -105,7 +105,7 @@ def create():
         fd.write("USE_X_SENDFILE = False  # Leave this as False unless you know what you are doing\n")
         fd.write("CACHE_DIR = 'cache/'\n")
         fd.write("DATABASE_FILE = 'posts.db'\n")
-        fd.write("SECRET_KEY = {0}\n".format(os.urandom(15)))
+        fd.write("SECRET_KEY = {0}\n".format(os.urandom(1042)))
 
     print("Copying static files")
     update_static()
