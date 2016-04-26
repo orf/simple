@@ -167,6 +167,19 @@ def list_posts():
                            title="Posts")
 
 
+@app.route("/<int:id>")
+@orm.db_session
+def view_by_id(id):
+    post = orm.select(p for p in Post
+                      if p.id == id and p.draft is False
+                      and p.is_special_page is not True).get()
+
+    if post is None:
+        return abort(404)
+
+    return redirect(url_for('view_post', slug=post.slug))
+
+
 @app.route("/<string:slug>")
 @orm.db_session
 def view_post(slug):
