@@ -177,7 +177,7 @@ def view_by_id(id):
     if post is None:
         return abort(404)
 
-    return redirect(url_for('view_post', slug=post.slug))
+    return redirect(url_for('view_post', slug=post.slug), 301)
 
 
 @app.route("/<string:slug>")
