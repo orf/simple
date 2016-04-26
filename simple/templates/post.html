@@ -77,7 +77,7 @@
     {% if config.DISQUS_SHORTNAME and not post.draft %}
         <script type="text/javascript">
             var disqus_shortname = '{{ config.DISQUS_SHORTNAME }}';
-            var disqus_identifier = '{{ post.id }}';
+            var disqus_identifier = '{{ post.slug }}';
             var disqus_url = '{{ url_for('view_post', slug=post.slug, _external=True) }}';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
