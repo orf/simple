@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='simpleblogging',
-    version='2.0.12',
+    version='2.0.13',
     packages=['simple'],
     url='http://github.com/orf/simple',
     license='MIT',
