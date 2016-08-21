@@ -233,7 +233,7 @@ def new_post():
         slug=slugify(request.form["title"]),
         created=datetime.date.today(),
         modified=datetime.datetime.now(),
-        content=" ",
+        content="Post content goes here. Obviously.",
         is_special_page=False,
         draft=True
     )
