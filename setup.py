@@ -4,7 +4,7 @@ setup(
     name='simpleblogging',
     version='2.0.13',
     packages=['simple'],
-    url='http://github.com/orf/simple',
+    url='https://github.com/orf/simple',
     license='MIT',
     author='Orf',
     author_email='tom@tomforb.es',
